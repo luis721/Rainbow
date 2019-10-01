@@ -21,10 +21,10 @@ public class AffineMap {
      */
     private final short[][] M;
 
-    public AffineMap(int d, int q) {
-        this.d = d;
+    public AffineMap(short[][] M, int q) {
         this.q = q;
-        this.M = new short[d][d];
+        this.d = M.length;
+        this.M = M;
     }
 
     public int getSize() {
