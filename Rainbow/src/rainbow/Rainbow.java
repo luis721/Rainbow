@@ -1,5 +1,8 @@
 package rainbow;
 
+import java.security.SecureRandom;
+import org.bouncycastle.pqc.math.linearalgebra.GF2mField;
+
 /**
  *
  * @author mlcarcamo
@@ -9,16 +12,16 @@ public class Rainbow {
     private final int q;
     private final int[] v;
     private final int[] o;
-    private final char[] seed;
+    private final byte[] seed;
     private final PublicKey pk;
     private final PrivateKey sk;
 
     public Rainbow(int q, int v1, int o1, int o2) {
         this.q = q;
-        // CREAR CAMPO Fq
+        GF2mField Fq = new GF2mField(2 ^ q);
         this.v = new int[]{v1, o1 + v1, v1 + o1 + o2};
         this.o = new int[]{o1, o2};
-        this.seed = seed(256);
+        this.seed = seed();
         AffineMap S = createS();
         AffineMap T = createT();
         RainbowMap F = new RainbowMap(this); //  TOOD
@@ -32,9 +35,10 @@ public class Rainbow {
      * @param size
      * @return
      */
-    private char[] seed(int size) {
-        // TODO
-        return null;
+    private byte[] seed() {
+        SecureRandom sr = new SecureRandom();
+        byte[] rndBytes = sr.generateSeed(32);
+        return rndBytes;
     }
 
     /**
@@ -61,7 +65,6 @@ public class Rainbow {
      * @return
      */
     public short randomFieldItem() {
-        // TODO
         // Usar seed para generar.
         return 0;
     }
