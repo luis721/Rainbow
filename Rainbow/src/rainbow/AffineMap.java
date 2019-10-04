@@ -21,12 +21,12 @@ public class AffineMap {
      */
     private final short[][] M;
 
-    public AffineMap(short[][] M, int q) {
+    public AffineMap(int q, short[][] M) {
         this.q = q;
         this.d = M.length;
         this.M = M;
     }
-
+    
     public int getSize() {
         return d;
     }

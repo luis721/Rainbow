@@ -7,37 +7,57 @@ package rainbow;
 public class RainbowPolynomial {
 
     private Rainbow R;
-    private final short[][] M;
+    private Matrix[] F;
+    private Matrix[] Q;
 
-    public RainbowPolynomial(Rainbow R, int k) {
-        this.R = R;
-        int l = getLayer(k);
-        this.M = new short[R.n()][R.n()];
-        // Random alpha values
-        for (int j = 0; j < R.v(l); j++) {
-            for (int i = 0; i < j; i++) {
-                M[i][j] = R.randomFieldItem();
-            }
-        }
-        // Random beta values
-        for (int i = R.v(l); i < R.v(l) + 1; i++) {
-            for (int j = 0; j < R.v(l + 1); j++) {
-                M[i][j] = R.randomFieldItem();
-            }
+    public enum Layer {
+        ONE, TWO
+    }
+
+    public RainbowPolynomial(Rainbow R, Layer layer) {
+        // -- c a p a  u n o  -- //
+        if (layer == Layer.ONE) {
+            this.F = new Matrix[]{
+                new Matrix(R, R.v(1), R.v(1)), // TODO (TRIANGULAR SUPERIOR I < J)
+                new Matrix(R, R.v(1), R.o(1))
+            };
+            Matrix T2 = R.T(2);
+            Matrix T3 = R.T(3);
+            Matrix F1T = F(1).transpose();
+            Matrix A = F(1).add(F1T);
+            Matrix T1T = R.T(1).transpose();
+            Matrix T2T = R.T(2).transpose();
+            Matrix B = T1T.mult(F(2));
+            this.Q[0] = this.F(1);
+            this.Q[1] = A.mult(R.T(1)).add(F(2));
+            this.Q[2] = A.mult(T2).add(F(2).mult(T3));
+            this.Q[3] = T1T.mult(F(1)).mult(R.T(1)).add(B).UT();
+            this.Q[4] = T1T.mult(A).mult(T2).add(B.mult(T3)).add(F(2).transpose().mult(T2));
+            this.Q[5] = T2T.mult(F(1)).mult(T2).add(T2T.mult(F(2).mult(T3))).UT();
+        } else { // -- c a p a  d o s -- //
+
         }
     }
 
-    /**
-     * Given an index k, returns the layer of the current polynomial.
-     *
-     * @param k
-     * @return
-     */
-    private int getLayer(int k) {
-        if (k < R.v(2)) {
-            return 1;
+    public final Matrix F(int k) {
+        return this.F[k + 1];
+    }
+
+    public Matrix Q(int i) {
+        switch (i) {
+            case 1:
+                return this.Q[0];
+            case 2:
+                return this.Q[1];
+            case 3:
+                return this.Q[2];
+            case 5:
+                return this.Q[3];
+            case 6:
+                return this.Q[4];
+            default:
+                return this.Q[5];
         }
-        return 2;
     }
 
 }

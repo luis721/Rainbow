@@ -14,19 +14,24 @@ public class Rainbow {
     private final int[] o;
     private final byte[] seed;
     private final PublicKey pk;
-    private final PrivateKey sk;
+    //private final PrivateKey sk;
+    private Matrix[] T;
+    private Matrix Sp;
+    private Matrix[] QL1;
+    private final GF2mField GF;
 
     public Rainbow(int q, int v1, int o1, int o2) {
         this.q = q;
-        GF2mField Fq = new GF2mField(2 ^ q);
+        this.GF = new GF2mField(2 ^ q);
         this.v = new int[]{v1, o1 + v1, v1 + o1 + o2};
         this.o = new int[]{o1, o2};
         this.seed = seed();
-        AffineMap S = createS();
-        AffineMap T = createT();
+        createS();
+        createT();
         RainbowMap F = new RainbowMap(this); //  TOOD
-        this.sk = new PrivateKey(F, T, S);
+        //this.sk = new PrivateKey(F, T, S);
         this.pk = new PublicKey();
+        this.QL1 = new Matrix[6];
     }
 
     /**
@@ -47,16 +52,10 @@ public class Rainbow {
      * @param seed
      * @return
      */
-    private AffineMap createT() {
-        // TODO
-        // Usar seed en la generación
-        short[][] M = new short[n()][n()]; // MATRIZ DE n x n
-        short[][] T1 = randomInvertible(v(1), o(1)); // T1
-        short[][] T2 = randomInvertible(v(1), o(2)); // T2
-        short[][] T3 = randomInvertible(o(1), o(2)); // T3
-        // Meter T1, T2 y T3 en M
-        // TODO
-        return new AffineMap(M, q);
+    private void createT() {
+        this.T[0] = new Matrix(this, v(1), o(1)); // T1
+        this.T[1] = new Matrix(this, v(1), o(2)); // T2
+        this.T[2] = new Matrix(this, o(1), o(2)); // T3
     }
 
     /**
@@ -66,50 +65,8 @@ public class Rainbow {
      */
     public short randomFieldItem() {
         // Usar seed para generar.
+        // TODO TODO TODO TODO TODO
         return 0;
-    }
-
-    /**
-     * Creates a random squared matrix of size r x c.
-     *
-     * @param r Number of rows
-     * @param c Number of columns
-     * @return
-     */
-    private short[][] random(int r, int c) {
-        short[][] M = new short[r][c];
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
-                M[i][j] = this.randomFieldItem();
-            }
-        }
-        return M;
-    }
-
-    /**
-     * Creates a random invertible matrix of size r x c in Fq.
-     *
-     * @param r
-     * @param c
-     * @return
-     */
-    private short[][] randomInvertible(int r, int c) {
-        short[][] M;
-        do {
-            M = random(r, c);
-        } while (!isInvertible(M));
-        return M;
-    }
-
-    /**
-     * Checks whether if the given matriz M is INVERTIBLE under Fq.
-     *
-     * @param M
-     * @return
-     */
-    private boolean isInvertible(short[][] M) {
-        // TODO
-        return false;
     }
 
     /**
@@ -118,12 +75,12 @@ public class Rainbow {
      * @param seed
      * @return
      */
-    private AffineMap createS() {
-        short[][] M = new short[m()][m()]; // MATRIZ DE m x m
-        short[][] S = randomInvertible(o(1), o(2)); // S'
-        // METER S EN M.
-        // TODO
-        return new AffineMap(M, q);
+    private void createS() {
+        this.Sp = new Matrix(this, o(1), o(2)); // S'
+    }
+
+    public Matrix T(int index){
+        return this.T[index++];
     }
 
     public PublicKey getPk() {
@@ -131,7 +88,8 @@ public class Rainbow {
     }
 
     public PrivateKey getSk() {
-        return sk;
+        // TODO
+        return null;
     }
 
     public int v(int k) {
