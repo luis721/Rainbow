@@ -18,7 +18,10 @@ public class Layer {
                 P.put(i, RP);
             }
         } else { // Layer 2
-
+            for(int i = R.v(2)+1; i<=R.n();i++){
+                RainbowPolynomial RP = new RainbowPolynomial(R, RainbowPolynomial.Layer.TWO);
+                P.put(i, RP);
+            }
         }
     }
     

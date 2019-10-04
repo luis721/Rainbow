@@ -24,16 +24,17 @@ public class RainbowPolynomial {
             Matrix T2 = R.T(2);
             Matrix T3 = R.T(3);
             Matrix F1T = F(1).transpose();
-            Matrix A = F(1).add(F1T);
             Matrix T1T = R.T(1).transpose();
             Matrix T2T = R.T(2).transpose();
+            Matrix A = F(1).add(F1T);
             Matrix B = T1T.mult(F(2));
+            Matrix C = F(2).mult(T3);
             this.Q[0] = this.F(1);
             this.Q[1] = A.mult(R.T(1)).add(F(2));
-            this.Q[2] = A.mult(T2).add(F(2).mult(T3));
+            this.Q[2] = A.mult(T2).add(C);
             this.Q[3] = T1T.mult(F(1)).mult(R.T(1)).add(B).UT();
             this.Q[4] = T1T.mult(A).mult(T2).add(B.mult(T3)).add(F(2).transpose().mult(T2));
-            this.Q[5] = T2T.mult(F(1)).mult(T2).add(T2T.mult(F(2).mult(T3))).UT();
+            this.Q[5] = T2T.mult(F(1)).mult(T2).add(T2T.mult(C)).UT();
         } else { // -- c a p a  d o s -- //
 
         }

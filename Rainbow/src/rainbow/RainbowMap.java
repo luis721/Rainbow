@@ -15,4 +15,12 @@ public class RainbowMap {
         };
     }
 
+    public Layer LayerOne() {
+        return layers[0];
+    }
+
+    public Layer LayerTwo() {
+        return layers[1];
+    }
+
 }
