@@ -81,10 +81,12 @@ public class Matrix {
     public int getElement(int x, int y) {
         return elements[x][y];
     }
-
-    public String show() {
-        return String.format("Size: %d x %d\n", this.rows, this.cols);
+    
+    public String show(){
+        String cadena = this.elements.toString();
+        return cadena; 
     }
+
 
     public Matrix add(Matrix B) {
         if (this.rows != B.rows) {

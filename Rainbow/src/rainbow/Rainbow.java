@@ -105,10 +105,14 @@ public class Rainbow {
 
     public static void main(String[] args) {
         Rainbow R = new Rainbow(8, 68, 48, 48);
-        System.out.println(Arrays.toString(R.seed(256)));
-        System.out.println(R.randomFieldItem());
-        System.out.println(R.randomFieldItem());
-        System.out.println(R.randomFieldItem());
-        System.out.println(R.randomFieldItem());
+//        System.out.println(Arrays.toString(R.seed(256)));
+//        System.out.println(R.randomFieldItem());
+//        System.out.println(R.randomFieldItem());
+//        System.out.println(R.randomFieldItem());
+//        System.out.println(R.randomFieldItem());
+        RainbowMap RM = new RainbowMap(R);
+        PublicKey PK = new PublicKey(RM, R.Sp); 
+        System.out.println(PK.MP1().toString());
+        System.out.println(PK.MP2().toString());
     }
 }

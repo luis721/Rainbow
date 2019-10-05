@@ -51,16 +51,11 @@ public class RainbowPolynomial {
             this.F[4] = new Matrix(R, R.o(1), R.o(2));
             // -- creación de las matrices Q -- //
             Matrix F5T = F(5).transpose();
-            System.out.println("F5T: " + F5T.show());
             Matrix F5sF5T = F(5).add(F5T);
-            System.out.println("F5sF5T: " + F5sF5T.show());
             this.Q[0] = this.F(1);
             this.Q[1] = A.mult(T1).add(F(2));
             this.Q[2] = A.mult(T2);
-            System.out.println("AxT2: " + this.Q[2].show());
             this.Q[2] = this.Q[2].add(F2mT3);
-            System.out.println("AxT2xF2mT3: " + this.Q[2].show());
-            System.out.println("F3: " + this.F(3).show());
             this.Q[2] = this.Q[2].add(F(3));
             this.Q[3] = T1T.mult(F(1)).mult(T1).add(T1T.mult(F(2)).add(F(5))).UT();
             this.Q[4] = T1T.mult(A.mult(T2)).add(B.mult(T3)).add(T1T.mult(F(3))).mult(F2TmT2).add(F5sF5T).mult(T3).add(F(6));
