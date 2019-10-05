@@ -1,6 +1,7 @@
 package rainbow;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import org.bouncycastle.pqc.math.linearalgebra.GF2mField;
 
 /**
@@ -12,12 +13,12 @@ public class Rainbow {
     private final int q;
     private final int[] v;
     private final int[] o;
-    private final byte[] seed;
+    private final SecureRandom sr;
     private final PublicKey pk;
     //private final PrivateKey sk;
-    private Matrix[] T;
-    private Matrix Sp;
-    private Matrix[] QL1;
+    private final Matrix[] T;
+    private final Matrix Sp;
+    private final Matrix[] QL1;
     private final GF2mField GF;
 
     public Rainbow(int q, int v1, int o1, int o2) {
@@ -25,8 +26,10 @@ public class Rainbow {
         this.GF = new GF2mField(2 ^ q);
         this.v = new int[]{v1, o1 + v1, v1 + o1 + o2};
         this.o = new int[]{o1, o2};
-        this.seed = seed();
-        createS();
+        byte[] seed = seed(256); // Random seed of 256 bits
+        this.sr = new SecureRandom(seed);
+        this.T = new Matrix[3]; // T1, T2 and T3
+        this.Sp = new Matrix(this, o(1), o(2)); // S'
         createT();
         RainbowMap F = new RainbowMap(this); //  TOOD
         //this.sk = new PrivateKey(F, T, S);
@@ -34,15 +37,19 @@ public class Rainbow {
         this.QL1 = new Matrix[6];
     }
 
+    public GF2mField GF() {
+        return this.GF;
+    }
+
     /**
      * Returns seed of the give bits size.
      *
-     * @param size
+     * @param size Number of bits
      * @return
      */
-    private byte[] seed() {
-        SecureRandom sr = new SecureRandom();
-        byte[] rndBytes = sr.generateSeed(32);
+    private byte[] seed(int size) {
+        SecureRandom srnd = new SecureRandom();
+        byte[] rndBytes = srnd.generateSeed(size / 8);
         return rndBytes;
     }
 
@@ -63,24 +70,12 @@ public class Rainbow {
      *
      * @return
      */
-    public short randomFieldItem() {
-        // Usar seed para generar.
-        // TODO TODO TODO TODO TODO
-        return 0;
+    public int randomFieldItem() {
+        return GF.getRandomElement(this.sr);
     }
 
-    /**
-     * Creates an invertible affine map of size m x m.
-     *
-     * @param seed
-     * @return
-     */
-    private void createS() {
-        this.Sp = new Matrix(this, o(1), o(2)); // S'
-    }
-
-    public Matrix T(int index){
-        return this.T[index++];
+    public Matrix T(int index) {
+        return this.T[--index];
     }
 
     public PublicKey getPk() {
@@ -108,4 +103,12 @@ public class Rainbow {
         return v[2];
     }
 
+    public static void main(String[] args) {
+        Rainbow R = new Rainbow(8, 68, 48, 48);
+        System.out.println(Arrays.toString(R.seed(256)));
+        System.out.println(R.randomFieldItem());
+        System.out.println(R.randomFieldItem());
+        System.out.println(R.randomFieldItem());
+        System.out.println(R.randomFieldItem());
+    }
 }
