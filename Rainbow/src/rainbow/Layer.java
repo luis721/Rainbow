@@ -10,7 +10,9 @@ public class Layer {
 
     private HashMap<Integer, RainbowPolynomial> P;
     private Matrix MQ;
+
     public Layer(Rainbow R, int index) {
+        this.P = new HashMap<>();
         if (index == 1) {
             // creación de los polinimios de la capa
             for (int i = R.v(1) + 1; i <= R.v(2); i++) {
@@ -18,7 +20,7 @@ public class Layer {
                 P.put(i, RP);
             }
         } else { // Layer 2
-            for(int i = R.v(2)+1; i<=R.n();i++){
+            for (int i = R.v(2) + 1; i <= R.n(); i++) {
                 RainbowPolynomial RP = new RainbowPolynomial(R, RainbowPolynomial.Layer.TWO);
                 P.put(i, RP);
             }
@@ -53,9 +55,9 @@ public class Layer {
             }
         }
     }
-    
+
     // RETURNS  Qk del i-ésimo polinomio
-    public Matrix Q(int i, int k){
+    public Matrix Q(int i, int k) {
         return this.P.get(i).Q(k);
     }
     public Matrix MQ(){
