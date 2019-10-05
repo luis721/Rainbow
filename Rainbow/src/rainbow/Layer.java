@@ -78,5 +78,13 @@ public class Layer {
     public Matrix MQ() {
         return this.MQ;
     }
+    
+    @Override
+    public String toString(){
+        // TODO
+        // MOSTRAR CADA POLINOMIO (Y POR TANTO, IMPLEMENTAR EL MÉTODO TO STRING
+        // EN LA CLASE RAINBOWPOLYNOMIAL)
+        return null;
+    }
 
 }

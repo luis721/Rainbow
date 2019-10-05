@@ -25,8 +25,7 @@ public class RainbowMap {
     
     public String toString()
     {
-        // TODO
-        return null;
+        return this.layers[1].toString() + this.layers[2].toString();
     }
 
 }
