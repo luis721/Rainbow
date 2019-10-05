@@ -6,28 +6,33 @@ package rainbow;
  */
 public class PrivateKey {
 
-    private final AffineMap T;
+    private final AffineMapT T;
 
-    private final AffineMap S;
+    private final AffineMapS S;
 
     private final RainbowMap F;
 
-    public PrivateKey(RainbowMap F, AffineMap T, AffineMap S) {
+    public PrivateKey(RainbowMap F, AffineMapT T, AffineMapS S) {
         this.F = F;
         this.T = T;
         this.S = S;
     }
 
-    public AffineMap getS() {
+    public AffineMapS getS() {
         return S;
     }
 
-    public AffineMap getT() {
+    public AffineMapT getT() {
         return T;
     }
 
     public RainbowMap getF() {
         return F;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

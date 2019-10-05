@@ -1,38 +1,8 @@
 package rainbow;
 
-/**
- *
- * @author mlcarcamo
- */
-public class AffineMap {
+public abstract class AffineMap {
 
-    /**
-     * Dimension of the map. This indicates it's of dimensions d x d.
-     */
-    private final int d;
+    public abstract AffineMap inverse();
 
-    /**
-     * Used for determining the field in which the map lies (Fq).
-     */
-    private final int q;
-
-    /**
-     * Matrix used to represent the AffineMap.
-     */
-    private final short[][] M;
-
-    public AffineMap(int q, short[][] M) {
-        this.q = q;
-        this.d = M.length;
-        this.M = M;
-    }
-    
-    public int getSize() {
-        return d;
-    }
-
-    public int getFieldDim() {
-        return q;
-    }
-
+    public abstract int getPosition(int i, int j);
 }

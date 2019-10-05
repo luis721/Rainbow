@@ -23,4 +23,9 @@ public class PublicKey {
     public Matrix MP2() {
         return this.MP2;
     }
+
+    public String toString() {
+        // TODO
+        return null;
+    }
 }

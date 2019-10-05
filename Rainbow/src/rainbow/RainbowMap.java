@@ -22,5 +22,11 @@ public class RainbowMap {
     public Layer LayerTwo() {
         return layers[1];
     }
+    
+    public String toString()
+    {
+        // TODO
+        return null;
+    }
 
 }

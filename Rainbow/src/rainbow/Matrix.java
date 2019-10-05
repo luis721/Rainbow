@@ -81,12 +81,6 @@ public class Matrix {
     public int getElement(int x, int y) {
         return elements[x][y];
     }
-    
-    public String show(){
-        String cadena = this.elements.toString();
-        return cadena; 
-    }
-
 
     public Matrix add(Matrix B) {
         if (this.rows != B.rows) {
@@ -221,6 +215,7 @@ public class Matrix {
         }
         return result;
     }
+
 
     @Override
     public boolean equals(Object matrix) {
