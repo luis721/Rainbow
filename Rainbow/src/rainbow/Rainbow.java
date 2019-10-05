@@ -30,7 +30,7 @@ public class Rainbow {
         createT();
         RainbowMap F = new RainbowMap(this); //  TOOD
         //this.sk = new PrivateKey(F, T, S);
-        this.pk = new PublicKey();
+        this.pk = new PublicKey(F,this.Sp);
         this.QL1 = new Matrix[6];
     }
 
