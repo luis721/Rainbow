@@ -1,5 +1,9 @@
 package rainbow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  *
  * @author mlcarcamo
@@ -30,9 +34,23 @@ public class PrivateKey {
         return F;
     }
 
-    @Override
-    public String toString() {
-        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * Guarda la epresentación de la llave privada en un archivo. La primera
+     * linea contiene a S'. La segunda linea contiene a str(T1) || str(T2) ||
+     * str(T3).
+     *
+     * @param file Ruta del archivo donde se guardará.
+     * @throws IOException
+     */
+    public void writeToFile(String file) throws IOException {
+        File f = new File(file);
+        FileWriter w = new FileWriter(f);
+        w.write(this.S.toString());
+        w.write('\n');
+        w.write(this.T.toString());
+        w.write('\n');
+        w.write(this.F.toString());
+        w.close();
     }
 
 }

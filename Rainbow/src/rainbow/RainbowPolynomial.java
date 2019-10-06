@@ -108,4 +108,21 @@ public class RainbowPolynomial {
         }
     }
 
+    /**
+     *
+     * @return Representación en cadena del polinomio. Es la representación
+     * hexadecimal de cada uno de sus elementos, es decir, la representación
+     * hexadecimal de cada una de sus matrices.
+     *
+     * Las matrices se muestran una por una.
+     */
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        for (Matrix matrix : F) {
+            b.append(matrix.toString());
+        }
+        return b.toString();
+    }
+
 }

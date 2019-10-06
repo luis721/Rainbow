@@ -25,8 +25,8 @@ public class RainbowMap {
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder(this.layers[1].toString());
-        b.append(this.layers[2].toString());
+        StringBuilder b = new StringBuilder(this.layers[0].toString());
+        b.append(this.layers[1].toString());
         return b.toString();
     }
 

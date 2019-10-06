@@ -33,10 +33,11 @@ public class PublicKey {
     public String toString() {
         StringBuilder b = new StringBuilder(MP1.toString());
         b.append(MP2.toString());
+        System.out.println("Coeficientes en PK: " + b.length());
         return b.toString();
     }
-    
-    public void writeToFile(String file) throws IOException{
+
+    public void writeToFile(String file) throws IOException {
         File f = new File(file);
         FileWriter w = new FileWriter(f);
         w.write(this.toString());

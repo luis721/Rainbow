@@ -1,8 +1,6 @@
 package rainbow;
 
 import utils.Matrix;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.security.SecureRandom;
 import utils.Field;
@@ -24,10 +22,9 @@ public final class Rainbow {
     private final Field GF;
 
     public Rainbow(int v1, int o1, int o2) {
-        // Creaciòn del campo
+        // Creación del campo
         this.q = 8;
-        // Polinomio = 1010 0111 => 0xA7
-        int pol = Integer.decode("0x11B");
+        int pol = Integer.decode("0x11B"); // Polinomio = 1010 0111 => 0xA7
         // OJO A ESTA PARTE TODO TODO TODO
         this.GF = new Field(8, pol); //GF(2^8) = GF(256)[x^8+x^4+x^3+x^1]
         //this.GF = new GF2mField(8); //GF(2^8) = GF(256)
@@ -68,7 +65,7 @@ public final class Rainbow {
     }
 
     /**
-     * Returns a random non-zeror element in the given field Fq.
+     * Returns a random non-zero element in the given field Fq.
      *
      * @return
      */
@@ -103,5 +100,6 @@ public final class Rainbow {
     public static void main(String[] args) throws IOException {
         Rainbow R = new Rainbow(68, 36, 36); // GF(256)
         R.getPk().writeToFile("public.key");
+        R.getSk().writeToFile("private.key");
     }
 }

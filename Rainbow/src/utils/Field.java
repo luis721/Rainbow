@@ -4,7 +4,7 @@ import org.bouncycastle.pqc.math.linearalgebra.GF2mField;
 
 /**
  *
- * @author Usuario
+ * @author mlcarcamo
  */
 public class Field extends GF2mField {
 

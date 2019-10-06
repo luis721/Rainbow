@@ -1,6 +1,5 @@
 package utils;
 
-import java.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
 import rainbow.Rainbow;
 
@@ -13,14 +12,17 @@ public class Matrix {
     private final int[][] elements;
     private final int rows, cols;
     private final Field F;
+    private boolean isUT;
 
     public Matrix(Rainbow R, int rows, int cols, boolean isUT) {
+        this.isUT = isUT;
         this.rows = rows;
         this.cols = cols;
         this.elements = new int[rows][cols];
         this.F = R.GF();
+        int j;
         for (int i = 0; i < rows; i++) {
-            int j = 0;
+            j = 0;
             if (isUT) {
                 j = i;
             }
@@ -32,6 +34,7 @@ public class Matrix {
     }
 
     public Matrix(Rainbow R, Matrix matrix) {
+        this.isUT = false;
         rows = matrix.rows();
         cols = matrix.cols();
         this.F = R.GF();
@@ -240,24 +243,21 @@ public class Matrix {
 
     @Override
     public String toString() {
-        System.out.printf("Size: %d x %d\n", rows, cols);
         StringBuilder b = new StringBuilder();
+        byte[] c = new byte[1];
+        int j;
         for (int i = 0; i < rows; i++) {
-            byte[] c = new byte[1];
-            for (int j = 0; j < cols; j++) {
-                // assert F.isElementOfThisField(elements[i][j]) == true;
+            j = 0;
+            if (this.isUT) {
+                j = i;
+            }
+            while (j < cols) {
+                // assert F.isElementOfThisField(elements[i][j]);
                 c[0] = (byte) elements[i][j];
                 b.append(Hex.toHexString(c));
+                j++;
             }
         }
         return b.toString();
     }
-    
-    public static void main(String[] args) {
-        int a = -151;
-        int b = 105;
-        System.out.println((byte) a);
-        System.out.println((byte) b);
-    }
-
 }
