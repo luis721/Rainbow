@@ -1,5 +1,7 @@
 package rainbow;
 
+import utils.Matrix;
+
 /**
  *
  * @author mlcarcamo

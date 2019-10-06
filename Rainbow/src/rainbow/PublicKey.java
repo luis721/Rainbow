@@ -1,5 +1,10 @@
 package rainbow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import utils.Matrix;
+
 /**
  *
  * @author mlcarcamo
@@ -24,8 +29,17 @@ public class PublicKey {
         return this.MP2;
     }
 
+    @Override
     public String toString() {
-        // TODO
-        return null;
+        StringBuilder b = new StringBuilder(MP1.toString());
+        b.append(MP2.toString());
+        return b.toString();
+    }
+    
+    public void writeToFile(String file) throws IOException{
+        File f = new File(file);
+        FileWriter w = new FileWriter(f);
+        w.write(this.toString());
+        w.close();
     }
 }

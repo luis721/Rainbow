@@ -22,10 +22,12 @@ public class RainbowMap {
     public Layer LayerTwo() {
         return layers[1];
     }
-    
-    public String toString()
-    {
-        return this.layers[1].toString() + this.layers[2].toString();
+
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder(this.layers[1].toString());
+        b.append(this.layers[2].toString());
+        return b.toString();
     }
 
 }

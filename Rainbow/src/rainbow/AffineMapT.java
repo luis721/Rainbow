@@ -1,5 +1,8 @@
 package rainbow;
 
+import utils.Matrix;
+import utils.AffineMap;
+
 /**
  *
  * @author mlcarcamo
@@ -45,10 +48,13 @@ public class AffineMapT extends AffineMap {
                 throw new IllegalArgumentException("Invalid index.");
         }
     }
-    
-    public String toString(){
-        // TODO
-        return null;
+
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder(this.T1.toString());
+        b.append(T2.toString());
+        b.append(T3.toString());
+        return b.toString();
     }
 
 }

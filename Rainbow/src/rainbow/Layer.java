@@ -1,5 +1,6 @@
 package rainbow;
 
+import utils.Matrix;
 import java.util.HashMap;
 
 /**

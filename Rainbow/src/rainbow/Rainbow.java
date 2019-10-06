@@ -1,7 +1,11 @@
 package rainbow;
 
+import utils.Matrix;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.SecureRandom;
-import org.bouncycastle.pqc.math.linearalgebra.GF2mField;
+import utils.Field;
 
 /**
  *
@@ -17,11 +21,16 @@ public final class Rainbow {
     private final PrivateKey sk;
     private final AffineMapT T;
     private final AffineMapS S;
-    private final GF2mField GF;
+    private final Field GF;
 
-    public Rainbow(int q, int v1, int o1, int o2) {
-        this.q = q;
-        this.GF = new GF2mField(2 ^ q);
+    public Rainbow(int v1, int o1, int o2) {
+        // Creaciòn del campo
+        this.q = 8;
+        // Polinomio = 1010 0111 => 0xA7
+        int pol = Integer.decode("0x11B");
+        // OJO A ESTA PARTE TODO TODO TODO
+        this.GF = new Field(8, pol); //GF(2^8) = GF(256)[x^8+x^4+x^3+x^1]
+        //this.GF = new GF2mField(8); //GF(2^8) = GF(256)
         // Valores de V y O
         this.v = new int[]{v1, o1 + v1, v1 + o1 + o2};
         this.o = new int[]{o1, o2};
@@ -38,7 +47,7 @@ public final class Rainbow {
         this.pk = new PublicKey(F, this.S.S1());
     }
 
-    public GF2mField GF() {
+    public Field GF() {
         return this.GF;
     }
 
@@ -59,12 +68,12 @@ public final class Rainbow {
     }
 
     /**
-     * Returns a random element in the given field Fq.
+     * Returns a random non-zeror element in the given field Fq.
      *
      * @return
      */
     public int randomFieldItem() {
-        return GF.getRandomElement(this.sr);
+        return GF.getRandomNonZeroElement(this.sr);
     }
 
     public PublicKey getPk() {
@@ -91,8 +100,8 @@ public final class Rainbow {
         return v[2];
     }
 
-    public static void main(String[] args) {
-        Rainbow R = new Rainbow(8, 68, 48, 48);
-        RainbowMap RM = new RainbowMap(R);
+    public static void main(String[] args) throws IOException {
+        Rainbow R = new Rainbow(68, 36, 36); // GF(256)
+        R.getPk().writeToFile("public.key");
     }
 }

@@ -1,6 +1,8 @@
-package rainbow;
+package utils;
 
-import org.bouncycastle.pqc.math.linearalgebra.GF2mField;
+import java.util.Arrays;
+import org.bouncycastle.util.encoders.Hex;
+import rainbow.Rainbow;
 
 /**
  *
@@ -10,7 +12,7 @@ public class Matrix {
 
     private final int[][] elements;
     private final int rows, cols;
-    private final GF2mField F;
+    private final Field F;
 
     public Matrix(Rainbow R, int rows, int cols, boolean isUT) {
         this.rows = rows;
@@ -41,7 +43,7 @@ public class Matrix {
         }
     }
 
-    public Matrix(GF2mField GF, Matrix matrix) {
+    public Matrix(Field GF, Matrix matrix) {
         rows = matrix.rows();
         cols = matrix.cols();
         this.F = GF;
@@ -53,7 +55,7 @@ public class Matrix {
         }
     }
 
-    public Matrix(GF2mField GF, int[][] matrix) {
+    public Matrix(Field GF, int[][] matrix) {
         rows = matrix.length;
         cols = matrix[0].length;
         this.F = GF;
@@ -67,7 +69,7 @@ public class Matrix {
         this.elements = new int[rows][cols];
     }
 
-    public Matrix(GF2mField GF, int rows, int cols) {
+    public Matrix(Field GF, int rows, int cols) {
         this.F = GF;
         this.rows = rows;
         this.cols = cols;
@@ -216,7 +218,6 @@ public class Matrix {
         return result;
     }
 
-
     @Override
     public boolean equals(Object matrix) {
         if (!(matrix instanceof Matrix)) {
@@ -236,4 +237,27 @@ public class Matrix {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        System.out.printf("Size: %d x %d\n", rows, cols);
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            byte[] c = new byte[1];
+            for (int j = 0; j < cols; j++) {
+                // assert F.isElementOfThisField(elements[i][j]) == true;
+                c[0] = (byte) elements[i][j];
+                b.append(Hex.toHexString(c));
+            }
+        }
+        return b.toString();
+    }
+    
+    public static void main(String[] args) {
+        int a = -151;
+        int b = 105;
+        System.out.println((byte) a);
+        System.out.println((byte) b);
+    }
+
 }

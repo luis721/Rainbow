@@ -1,5 +1,8 @@
 package rainbow;
 
+import utils.Matrix;
+import utils.AffineMap;
+
 /**
  *
  * @author fabia
@@ -30,11 +33,10 @@ public class AffineMapS extends AffineMap {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
     public String toString()
     {
-        // TODO
-        // MOSTRAR 0<=i<o1; i<=j<o1;
-        return null;
+        return this.Sp.toString();
     }
 
 }
