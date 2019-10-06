@@ -62,6 +62,9 @@ public class RainbowPolynomial {
             this.Q[5] = T2T.mult(F(1)).mult(T2).add(T2T.mult(F2mT3)).add(T3T.mult(F(5).mult(T3))).add(T2T.mult(F(3))).add(T3T.mult(F(6))).UT();
         }
     }
+    
+  
+
 
     public final Matrix F(int k) {
         Matrix Re;
@@ -86,6 +89,11 @@ public class RainbowPolynomial {
         }
         return Re;
     }
+    
+    public int getFlength(){
+        return F.length;
+    }
+ 
 
     public Matrix Q(int i) {
         switch (i) {
@@ -105,5 +113,8 @@ public class RainbowPolynomial {
                 throw new IllegalArgumentException("Index no válido.");
         }
     }
+    
+
+      
 
 }

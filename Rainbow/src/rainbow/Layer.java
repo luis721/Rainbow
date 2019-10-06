@@ -10,8 +10,10 @@ public class Layer {
 
     private final HashMap<Integer, RainbowPolynomial> P;
     private final Matrix MQ;
+    private final Rainbow R;
 
     public Layer(Rainbow R, int index) {
+        this.R=R;
         this.P = new HashMap<>();
         int delta;
         if (index == 1) {
@@ -81,10 +83,38 @@ public class Layer {
     
     @Override
     public String toString(){
+            
         // TODO
         // MOSTRAR CADA POLINOMIO (Y POR TANTO, IMPLEMENTAR EL MÉTODO TO STRING
         // EN LA CLASE RAINBOWPOLYNOMIAL)
-        return null;
-    }
 
+        String CentralMap="Central map:\n";
+        CentralMap+="Layer one:\n";
+        for (int i = R.v(1) + 1; i <= R.v(2); i++) {
+            for (int j = 0; j < P.get(i).getFlength(); j++) {
+                Matrix F = P.get(i).F(j);
+                for (int k = 0; k < F.rows(); k++) {
+                    for (int l = 0; l < F.cols(); l++) {
+                        CentralMap+=F.getElement(k, l)+"\n";
+                    }
+                }
+            }  
+        }  
+        CentralMap+="Layer two:\n";
+        for (int i = R.v(2) + 1; i <= R.n(); i++) {
+            for (int j = 0; j < P.get(i).getFlength(); j++) {
+                Matrix F = P.get(i).F(j);
+                for (int k = 0; k < F.rows(); k++) {
+                    for (int l = 0; l < F.cols(); l++) {
+                        CentralMap+=F.getElement(k, l)+"\n";
+                    }
+                }
+            }  
+        }
+        return CentralMap;
+    
+    }
+    
 }
+
+

@@ -150,6 +150,8 @@ public class Matrix {
         //Result matrix is in row echelon form
         return result;
     }
+    
+
 
     public Matrix mult(Matrix B) {
         Matrix result = new Matrix(F, this.rows, B.cols);
