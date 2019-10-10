@@ -1,8 +1,9 @@
 package rainbow;
 
-import utils.Matrix;
+import utils.FullMatrix;
 import java.util.HashMap;
 import java.util.Map;
+import utils.Matrix;
 
 /**
  *
@@ -11,15 +12,20 @@ import java.util.Map;
 public class Layer {
 
     private final HashMap<Integer, RainbowPolynomial> P;
-    private final Matrix MQ;
+    private final FullMatrix MQ;
 
+    /**
+     * 
+     * @param R
+     * @param index 
+     */
     public Layer(Rainbow R, int index) {
         this.P = new HashMap<>();
         int delta;
         RainbowPolynomial RP; // Avoiding temporal object creation in each iter
         if (index == 1) {
             delta = R.v(1) + 1;
-            this.MQ = new Matrix(R, R.o(1), (R.n() * (R.n() + 1)) / 2);
+            this.MQ = new FullMatrix(R.GF(), R.o(1), (R.n() * (R.n() + 1)) / 2);
             // creación de los polinimios de la capa
             for (int i = R.v(1) + 1; i <= R.v(2); i++) {
                 RP = new RainbowPolynomial(R, RainbowPolynomial.Layer.ONE);
@@ -27,7 +33,7 @@ public class Layer {
             }
         } else { // Layer 2
             delta = R.v(2) + 1;
-            this.MQ = new Matrix(R, R.n() - R.v(2), (R.n() * (R.n() + 1)) / 2);
+            this.MQ = new FullMatrix(R.GF(), R.o(2), (R.n() * (R.n() + 1)) / 2);
             for (int i = R.v(2) + 1; i <= R.n(); i++) {
                 RP = new RainbowPolynomial(R, RainbowPolynomial.Layer.TWO);
                 P.put(i, RP);
@@ -73,11 +79,11 @@ public class Layer {
     }
 
     // RETURNS  Qk of i-th polynomial
-    public final Matrix Q(int i, int k) {
+    private Matrix Q(int i, int k) {
         return this.P.get(i).Q(k);
     }
 
-    public Matrix MQ() {
+    public FullMatrix MQ() {
         return this.MQ;
     }
 
@@ -91,6 +97,7 @@ public class Layer {
         StringBuilder b = new StringBuilder();
         RainbowPolynomial polinomio;
         for (Map.Entry<Integer, RainbowPolynomial> entry : P.entrySet()) {
+            b.append("Polinomio ").append(entry.getKey()).append("\n");
             polinomio = entry.getValue();
             b.append(polinomio.toString());
             b.append('\n');

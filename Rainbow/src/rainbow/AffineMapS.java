@@ -1,41 +1,66 @@
 package rainbow;
 
-import utils.Matrix;
-import utils.AffineMap;
+import utils.FullMatrix;
 
 /**
+ * Represents the invertible affine map S.
  *
  * @author fabia
  */
-public class AffineMapS extends AffineMap {
+public class AffineMapS {
 
-    private final Matrix Sp;
+    private final FullMatrix Sp;
 
-    public AffineMapS(Matrix Sp) {
-        this.Sp = Sp;
-    }
-
+    /**
+     * Creates a random invertible affine map (S) of size m x m.
+     * <br>
+     * This is defined as an upper triangular matrix where the diagonal elements
+     * are all ones. And the upper left-most block of size o1 x o2 is the matrix
+     * <b>Sp</b>, which is generated randomly.
+     * <br>
+     * S = [I Sp; 0 I].
+     * <br>
+     *
+     * @param R Rainbow instance used to generate the random elements of the
+     * matrix.
+     */
     public AffineMapS(Rainbow R) {
-        this.Sp = new Matrix(R, R.o(1), R.o(2), false);
+        this.Sp = new FullMatrix(R, R.o(1), R.o(2));
     }
-    
-    public Matrix S1(){
+
+    /**
+     * Retrieves the upper left-most o1 x o2 submatrix of the affine map.
+     *
+     * @return The matrix that forms the upper left-most block of the matrix
+     * representing the affine map.
+     */
+    public FullMatrix S1() {
         return this.Sp;
     }
 
-    @Override
-    public AffineMap inverse() {
+    /**
+     * The inverse of the affine map S, given the way it's defined, this is the
+     * same affine map. i.e.: inverse(S) = S.
+     *
+     * @return The inverse of this affine map.
+     */
+    public AffineMapS inverse() {
         return this;
     }
 
+    /**
+     * This method returns an string representing the affine map.
+     * <br>
+     * Given it's definition, this string will be exactly the same definition as
+     * for Sp, given that only with the information of Sp it's possible to
+     * rebuild the affine map. Recall that all other elements -besides the main
+     * diagonal- are all zeros.
+     *
+     * @return String representing the affine map.
+     *
+     */
     @Override
-    public int getPosition(int i, int j) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public String toString()
-    {
+    public String toString() {
         return this.Sp.toString();
     }
 

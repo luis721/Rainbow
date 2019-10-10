@@ -1,6 +1,5 @@
 package rainbow;
 
-import utils.Matrix;
 import java.io.IOException;
 import java.security.SecureRandom;
 import utils.Field;
@@ -11,7 +10,6 @@ import utils.Field;
  */
 public final class Rainbow {
 
-    private final int q;
     private final int[] v;
     private final int[] o;
     private final SecureRandom sr;
@@ -21,35 +19,51 @@ public final class Rainbow {
     private final AffineMapS S;
     private final Field GF;
 
+    /**
+     * Creates a new Rainbow instance.
+     *
+     * @param v1
+     * @param o1 Number of polynomials in the first layer.
+     * @param o2 Number of polynomials in the second layer.
+     */
     public Rainbow(int v1, int o1, int o2) {
-        // Creación del campo
-        this.q = 8;
-        int pol = Integer.decode("0x11B"); // Polinomio = 1010 0111 => 0xA7
-        // OJO A ESTA PARTE TODO TODO TODO
-        this.GF = new Field(8, pol); //GF(2^8) = GF(256)[x^8+x^4+x^3+x^1]
-        //this.GF = new GF2mField(8); //GF(2^8) = GF(256)
-        // Valores de V y O
-        this.v = new int[]{v1, o1 + v1, v1 + o1 + o2};
+        // Polynomial = x^8 + x^4 + x^3 + x^1 + 1  => 1 0001 1011 => 0x11B
+        int pol = Integer.decode("0x11B");
+        // Creates the field GF(256) with ops defined mod the given polynomial.
+        // This polynomial is the same one used for AES.
+        // GF(2^8) = GF(256)[x^8+x^4+x^3+x^1]
+        int q = 8;
+        this.GF = new Field(q, pol);
+        // Values of v1, v2 and v3 (n).
+        this.v = new int[]{v1, v1 + o1, v1 + o1 + o2};
+        // Values of o1 and o2
         this.o = new int[]{o1, o2};
-        // Creación de la semilla y el generador de elementos aleatorios
-        byte[] seed = seed(256); // Random seed of 256 bits
+        // Generation of the 256-bits random seed.
+        byte[] seed = seed(256);
+        // Creation of the PRNG with the obtained seed for the creation of 
+        // the elements of the field.
         this.sr = new SecureRandom(seed);
-        // Creacion de los mapas afines invertibles
-        this.S = new AffineMapS(this);
-        this.T = new AffineMapT(this);
-        // Creación del Mapa de Rainbow
+        // Creation of the random invertible affine maps.
+        this.S = new AffineMapS(this); // Random invertible affine map S.
+        this.T = new AffineMapT(this); // Random invertible affine map T.
+        // Creation of the central map.
         RainbowMap F = new RainbowMap(this);
-        // Creación de las llaves pública y privada
+        // Creation of the Private key
         this.sk = new PrivateKey(F, T, S);
+        // Creation of the public key.
         this.pk = new PublicKey(F, this.S.S1());
     }
 
+    /**
+     *
+     * @return The field in which the Rainbow instance is defined.
+     */
     public Field GF() {
         return this.GF;
     }
 
     /**
-     * Returns seed of the give bits size.
+     * Returns seed of the given bits size.
      *
      * @param size Number of bits
      * @return
@@ -60,8 +74,12 @@ public final class Rainbow {
         return rndBytes;
     }
 
-    public Matrix T(int index) {
-        return this.T.T(index);
+    /**
+     *
+     * @return Invertible affine map T.
+     */
+    public AffineMapT T() {
+        return this.T;
     }
 
     /**
@@ -73,26 +91,52 @@ public final class Rainbow {
         return GF.getRandomNonZeroElement(this.sr);
     }
 
+    /**
+     *
+     * @return Public key of the Rainbow instance.
+     */
     public PublicKey getPk() {
         return this.pk;
     }
 
+    /**
+     *
+     * @return Private key of the Rainbow instance.
+     */
     public PrivateKey getSk() {
         return this.sk;
     }
 
+    /**
+     *
+     * @param k Index of the v-value.
+     * @return Value of v<sub>k</sub>.
+     */
     public int v(int k) {
         return v[k - 1];
     }
 
+    /**
+     *
+     * @param k Index of the v-value.
+     * @return Value of o<sub>k</sub>.
+     */
     public int o(int k) {
         return o[k - 1];
     }
 
+    /**
+     *
+     * @return m, i.e.: Number of polynomials.
+     */
     public int m() {
         return o(1) + o(2);
     }
 
+    /**
+     *
+     * @return n, i.e.: Number of variables.
+     */
     public int n() {
         return v[2];
     }

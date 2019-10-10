@@ -3,7 +3,7 @@ package rainbow;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import utils.Matrix;
+import utils.FullMatrix;
 
 /**
  *
@@ -11,21 +11,21 @@ import utils.Matrix;
  */
 public class PublicKey {
 
-    private final Matrix MP1;
-    private final Matrix MP2;
+    private final FullMatrix MP1;
+    private final FullMatrix MP2;
 
-    public PublicKey(RainbowMap RM, Matrix Sp) {
-        Matrix MQ1 = RM.LayerOne().MQ();
-        Matrix MQ2 = RM.LayerTwo().MQ();
+    public PublicKey(RainbowMap RM, FullMatrix Sp) {
+        FullMatrix MQ1 = RM.LayerOne().MQ();
+        FullMatrix MQ2 = RM.LayerTwo().MQ();
         this.MP1 = MQ1.add(Sp.mult(MQ2));
         this.MP2 = MQ2;
     }
 
-    public Matrix MP1() {
+    public FullMatrix MP1() {
         return this.MP1;
     }
 
-    public Matrix MP2() {
+    public FullMatrix MP2() {
         return this.MP2;
     }
 
@@ -33,14 +33,13 @@ public class PublicKey {
     public String toString() {
         StringBuilder b = new StringBuilder(MP1.toString());
         b.append(MP2.toString());
-        System.out.println("Coeficientes en PK: " + b.length());
         return b.toString();
     }
 
     public void writeToFile(String file) throws IOException {
         File f = new File(file);
-        FileWriter w = new FileWriter(f);
-        w.write(this.toString());
-        w.close();
+        try (FileWriter w = new FileWriter(f)) {
+            w.write(this.toString());
+        }
     }
 }
