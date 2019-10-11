@@ -18,34 +18,33 @@ public class Layer {
     private final FullMatrix MQ;
 
     /**
+     * Creates an instance of a Rainbow layer.
      *
-     * @param R
-     * @param index
+     * @param R Rainbow instance.
+     * @param index Index of the layer. This may be 1 or 2.
      */
     public Layer(Rainbow R, int index) {
-        this.P = new HashMap<>();
-        int delta;
-        RainbowPolynomial RP; // Avoiding temporal object creation in each iter
-        if (index == 1) {
-            delta = R.v(1) + 1;
-            this.MQ = new FullMatrix(R.GF(), R.o(1), (R.n() * (R.n() + 1)) / 2);
-            // creación de los polinimios de la capa
-            for (int i = R.v(1) + 1; i <= R.v(2); i++) {
-                RP = new RainbowPolynomial(R, RainbowPolynomial.Layer.ONE);
-                P.put(i, RP);
-            }
-        } else { // Layer 2
-            delta = R.v(2) + 1;
-            this.MQ = new FullMatrix(R.GF(), R.o(2), (R.n() * (R.n() + 1)) / 2);
-            for (int i = R.v(2) + 1; i <= R.n(); i++) {
-                RP = new RainbowPolynomial(R, RainbowPolynomial.Layer.TWO);
-                P.put(i, RP);
-            }
+        // Check if layer index is indeed valid
+        if (index <= 0 || index > 2) {
+            throw new IllegalArgumentException("Invalid layer index.");
         }
-        // Creation of MQ for THE layer.
+        // The hash map will store the polynomials that belong to the layer.
+        this.P = new HashMap<>();
+        // Contains the starting index of the polynomials in the layer
+        int delta = R.v(index) + 1;
+        RainbowPolynomial RP; // Avoiding temporal object creation in each iter
+        this.MQ = new FullMatrix(R.GF(), R.o(index), (R.n() * (R.n() + 1)) / 2);
+        // Creation of the polynomials of the layer
+        for (int i = R.v(index) + 1; i <= R.v(index + 1); i++) {
+            RP = new RainbowPolynomial(R, index);
+            P.put(i, RP);
+        }
+        // Creation of matrix MQ for the layer.
+        // Each matrix Q of the polynomials is inserted in a matrix MQ.
+        // The way this is done is described in the report.
         int j;
         for (int f = 0; f < this.P.size(); f++) {
-            int c  = 0;
+            int c = 0;
             RP = this.P.get(f + delta);
             for (int i = 0; i < R.v(1); i++) {//Q1||Q2
                 for (j = i; j < R.v(1); j++) {
@@ -88,11 +87,10 @@ public class Layer {
         }
     }
 
-    // RETURNS  Qk of i-th polynomial
-    private Matrix Q(int i, int k) {
-        return this.P.get(i).Q(k);
-    }
-
+    /**
+     *
+     * @return The matrix MQ of the layer.
+     */
     public FullMatrix MQ() {
         return this.MQ;
     }

@@ -5,19 +5,20 @@ import java.security.SecureRandom;
 import utils.Field;
 
 /**
+ * Rainbow instance.
  *
  * @author mlcarcamo
  */
 public final class Rainbow {
 
+    private final Field GF;
     private final int[] v;
     private final int[] o;
     private final SecureRandom sr;
-    private final PublicKey pk;
-    private final PrivateKey sk;
     private final AffineMapT T;
     private final AffineMapS S;
-    private final Field GF;
+    private final PublicKey pk;
+    private final PrivateKey sk;
 
     /**
      * Creates a new Rainbow instance.

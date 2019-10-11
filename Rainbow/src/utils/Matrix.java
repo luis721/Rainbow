@@ -3,7 +3,7 @@ package utils;
 /**
  * Abstract class for matrices.
  * <br>
- * Contains some abstractly defined essential methods and two methods for
+ * Contains some abstractly <i>defined</i> essential methods and two methods for
  * checking dimensions when performing operations with matrices.
  *
  * @author mlcarcamo
@@ -55,18 +55,16 @@ public abstract class Matrix {
      */
     protected final void verifyMult(Matrix B) {
         if (this.rows() == 0 || B.rows() == 0) {
-            throw new IllegalArgumentException("Matrix argument is empty, "
-                    + "operation cannot be performed.");
+            throw new IllegalArgumentException("Matrices must have at least one row.");
         }
 
         if (this.cols() == 0 || B.cols() == 0) {
-            throw new IllegalArgumentException("Argument matrix has empty row, "
-                    + "operation cannot be performed.");
+            throw new IllegalArgumentException("Matrices must have at least one column");
         }
 
         if (this.cols() != B.rows()) {
-            throw new IllegalArgumentException("Argument matrices cannot be multiplied, "
-                    + "their dimensions are wrong.");
+            throw new IllegalArgumentException("Matrices are incompatible."
+                    + " Number of rows of B must be the same as this's columns.");
         }
     }
 

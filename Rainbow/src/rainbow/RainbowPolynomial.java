@@ -13,14 +13,14 @@ public class RainbowPolynomial {
     private final Matrix[] F;
     private final Matrix[] Q;
 
-    public enum Layer {
-        ONE, TWO
-    }
-
-    public RainbowPolynomial(Rainbow R, Layer layer) {
+    public RainbowPolynomial(Rainbow R, int layer) {
+        // Check if layer index is indeed valid
+        if (layer <= 0 || layer > 2) {
+            throw new IllegalArgumentException("Invalid layer index.");
+        }
         // The amount of submatrices depends on wheter if the polynomial
         // belongs to the layer one or to the layer two.
-        if (layer == Layer.ONE) {
+        if (layer == 1) {
             this.F = new Matrix[2];
         } else {
             this.F = new Matrix[5];
@@ -49,7 +49,7 @@ public class RainbowPolynomial {
         FullMatrix T1T = T1.transpose(); // Transpose of T1
         FullMatrix T2T = T2.transpose(); // Transpose of T2
         // -- Layer one -- // 
-        if (layer == Layer.ONE) {
+        if (layer == 1) {
             // Q1 = F1.
             this.Q[0] = this.F(1);
             // Q2 = C + F2;
@@ -93,6 +93,11 @@ public class RainbowPolynomial {
         }
     }
 
+    /**
+     *
+     * @param k index of the submatrix to be retrieved.
+     * @return submatrix Fk of the polynomial.
+     */
     public final Matrix F(int k) {
         Matrix Re;
         switch (k) {
@@ -117,6 +122,11 @@ public class RainbowPolynomial {
         return Re;
     }
 
+    /**
+     *
+     * @param i Index of the Q submatrix.
+     * @return Submatrix Qi related to the Q matrix of the polynomial.
+     */
     public Matrix Q(int i) {
         switch (i) {
             case 1:

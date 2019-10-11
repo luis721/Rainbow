@@ -13,10 +13,14 @@ public final class LTMatrix extends Matrix {
 
     private final int n;
     private final int V[];
-    private final Field F;
 
+    /**
+     * Creates an empty n x n lower triangular matrix.
+     *
+     * @param F Field to where the matrix belongs.
+     * @param n Number of rows/cols of the matrix.
+     */
     private LTMatrix(Field F, int n) {
-        this.F = F;
         this.n = n;
         this.V = new int[n * (n + 1) / 2];
     }
@@ -29,7 +33,6 @@ public final class LTMatrix extends Matrix {
      */
     public LTMatrix(UTMatrix B) {
         this.n = B.rows();
-        this.F = B.field();
         this.V = new int[n * (n + 1) / 2];
         int j;
         for (int i = 0; i < n; i++) {
@@ -39,20 +42,6 @@ public final class LTMatrix extends Matrix {
                 j++;
             }
         }
-    }
-
-    public LTMatrix add(LTMatrix B) {
-        verifyAdd(B);
-        LTMatrix C = new LTMatrix(this.F, this.n);
-        int j;
-        for (int i = 0; i < this.n; i++) {
-            j = 0;
-            while (j <= i) {
-                C.setElement(i, j, F.add(this.getElement(i, j), B.getElement(i, j)));
-                j++;
-            }
-        }
-        return C;
     }
 
     @Override
@@ -71,6 +60,13 @@ public final class LTMatrix extends Matrix {
         this.V[getPosition(i, j)] = value;
     }
 
+    /**
+     * Position in the Vector for the i-th, j-th position.
+     *
+     * @param i Row of the element.
+     * @param j Column of the element.
+     * @return Index of the element in the vector.
+     */
     private int getPosition(int i, int j) {
         return i * (i + 1) / 2 + j;
     }
@@ -83,10 +79,6 @@ public final class LTMatrix extends Matrix {
     @Override
     public int cols() {
         return this.n;
-    }
-
-    public Field field() {
-        return F;
     }
 
 }

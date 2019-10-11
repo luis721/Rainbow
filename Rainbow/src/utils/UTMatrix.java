@@ -19,6 +19,12 @@ public final class UTMatrix extends Matrix {
     private final int V[];
     private final Field F;
 
+    /**
+     * Creates random squared matrix in upper-triangular form.
+     *
+     * @param R Rainbow instance used to generate the random items.
+     * @param n Number of ros/columns of the matrix.
+     */
     public UTMatrix(Rainbow R, int n) {
         this.n = n;
         this.V = new int[n * (n + 1) / 2];
@@ -32,6 +38,12 @@ public final class UTMatrix extends Matrix {
         }
     }
 
+    /**
+     * Crates an empty squared matrix in upper-triangular form.
+     *
+     * @param F Field to where the matrix belongs.
+     * @param n 
+     */
     public UTMatrix(Field F, int n) {
         this.F = F;
         this.n = n;
