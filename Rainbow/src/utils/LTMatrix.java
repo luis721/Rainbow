@@ -55,14 +55,6 @@ public final class LTMatrix extends Matrix {
         return C;
     }
 
-    /**
-     *
-     * @return
-     */
-    public UTMatrix transpose() {
-        return new UTMatrix(this);
-    }
-
     @Override
     public int getElement(int i, int j) {
         if (j > i) {

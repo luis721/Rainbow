@@ -6,18 +6,21 @@ import java.util.Map;
 import utils.Matrix;
 
 /**
+ * Represents the layers in the Rainbow scheme.
  *
  * @author mlcarcamo
  */
 public class Layer {
 
+    // Stores the polynomials in form <key, value>
+    // where the key is the polynomial index v1 + 1 <= k <= n
     private final HashMap<Integer, RainbowPolynomial> P;
     private final FullMatrix MQ;
 
     /**
-     * 
+     *
      * @param R
-     * @param index 
+     * @param index
      */
     public Layer(Rainbow R, int index) {
         this.P = new HashMap<>();
@@ -40,37 +43,44 @@ public class Layer {
             }
         }
         // Creation of MQ for THE layer.
+        int j;
         for (int f = 0; f < this.P.size(); f++) {
-            int c = 0;
+            int c  = 0;
             RP = this.P.get(f + delta);
             for (int i = 0; i < R.v(1); i++) {//Q1||Q2
-                for (int j = i; j < R.v(1); j++) {
+                for (j = i; j < R.v(1); j++) {
+                    assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(1).getElement(i, j));
                     c++;
                 }
-                for (int j = 0; j < R.o(1); j++) {
+                for (j = 0; j < R.o(1); j++) {
+                    assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(2).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < R.v(1); i++) {//Q3
-                for (int j = 0; j < R.o(2); j++) {
+                for (j = 0; j < R.o(2); j++) {
+                    assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(3).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < R.o(1); i++) {//Q5||Q6
-                for (int j = i; j < R.o(1); j++) {
+                for (j = i; j < R.o(1); j++) {
+                    assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(5).getElement(i, j));
                     c++;
                 }
-                for (int j = 0; j < R.o(2); j++) {
+                for (j = 0; j < R.o(2); j++) {
+                    assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(6).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < R.o(2); i++) {//Q9
-                for (int j = i; j < R.o(2); j++) {
+                for (j = i; j < R.o(2); j++) {
+                    assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(9).getElement(i, j));
                     c++;
                 }
@@ -97,10 +107,9 @@ public class Layer {
         StringBuilder b = new StringBuilder();
         RainbowPolynomial polinomio;
         for (Map.Entry<Integer, RainbowPolynomial> entry : P.entrySet()) {
-            b.append("Polinomio ").append(entry.getKey()).append("\n");
             polinomio = entry.getValue();
             b.append(polinomio.toString());
-            b.append('\n');
+            //b.append('\n');
         }
         return b.toString();
     }

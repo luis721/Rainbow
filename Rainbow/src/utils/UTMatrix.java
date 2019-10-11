@@ -1,5 +1,6 @@
 package utils;
 
+import org.bouncycastle.util.encoders.Hex;
 import rainbow.Rainbow;
 
 /**
@@ -35,18 +36,6 @@ public final class UTMatrix extends Matrix {
         this.F = F;
         this.n = n;
         this.V = new int[n * (n + 1) / 2];
-    }
-
-    public UTMatrix(LTMatrix B) {
-        this.n = B.rows();
-        this.F = B.field();
-        this.V = new int[n * (n + 1) / 2];
-        for (int i = 0; i < n; i++) {
-            int j = i;
-            while (j < n) {
-                this.setElement(i, j, B.getElement(j, i));
-            }
-        }
     }
 
     /**
@@ -167,6 +156,10 @@ public final class UTMatrix extends Matrix {
         return C;
     }
 
+    public Field field() {
+        return F;
+    }
+
     @Override
     public void setElement(int i, int j, int value) throws IllegalArgumentException {
         if (j < i) {
@@ -201,8 +194,21 @@ public final class UTMatrix extends Matrix {
         return this.n;
     }
 
-    public Field field() {
-        return F;
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        byte[] c = new byte[1];
+        int j;
+        for (int i = 0; i < n; i++) {
+            j = i;
+            while (j < n) {
+                // assert F.isElementOfThisField(elements[i][j]);
+                c[0] = (byte) getElement(i, j);
+                b.append(Hex.toHexString(c));
+                j++;
+            }
+        }
+        return b.toString();
     }
 
 }

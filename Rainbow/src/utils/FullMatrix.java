@@ -32,7 +32,7 @@ public class FullMatrix extends Matrix {
         this.F = R.GF();
         int j;
         for (int i = 0; i < rows; i++) {
-            j = 0; // By default, fills the full matrix
+            j = 0;
             while (j < cols) {
                 // Assigns to the current position an random generated
                 // element in the field in which the rainbow instance lies.

@@ -45,9 +45,7 @@ public class RainbowMap {
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder("Capa 1:\n");
-        b.append(this.layers[0].toString());
-        b.append("\nCapa 2:\n");
+        StringBuilder b = new StringBuilder(this.layers[0].toString());
         b.append(this.layers[1].toString());
         return b.toString();
     }

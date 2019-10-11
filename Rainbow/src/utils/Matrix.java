@@ -77,23 +77,19 @@ public abstract class Matrix {
      */
     protected final void verifyAdd(Matrix B) {
         if (this.rows() == 0 || B.rows() == 0) {
-            throw new IllegalArgumentException("Matrix argument is empty, "
-                    + "operation cannot be performed.");
+            throw new IllegalArgumentException("The number of rows must be non-zero.");
         }
 
         if (this.cols() == 0 || B.cols() == 0) {
-            throw new IllegalArgumentException("Argument matrix has empty row, "
-                    + "operation cannot be performed.");
+            throw new IllegalArgumentException("The number of columns must be non-zero");
         }
 
         if (this.rows() != B.rows()) {
-            throw new IllegalArgumentException("Argument matrices cannot be multiplied, "
-                    + "their dimensions are wrong.");
+            throw new IllegalArgumentException("The number of rows must be the same.");
         }
 
         if (this.cols() != B.cols()) {
-            throw new IllegalArgumentException("Argument matrices cannot be multiplied, "
-                    + "their dimensions are wrong.");
+            throw new IllegalArgumentException("The number of columns must be the same.");
         }
     }
 

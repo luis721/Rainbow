@@ -10,7 +10,6 @@ import utils.UTMatrix;
  */
 public class RainbowPolynomial {
 
-    private final Rainbow R;
     private final Matrix[] F;
     private final Matrix[] Q;
 
@@ -19,7 +18,6 @@ public class RainbowPolynomial {
     }
 
     public RainbowPolynomial(Rainbow R, Layer layer) {
-        this.R = R;
         // The amount of submatrices depends on wheter if the polynomial
         // belongs to the layer one or to the layer two.
         if (layer == Layer.ONE) {
@@ -38,7 +36,7 @@ public class RainbowPolynomial {
          (These two random submatrices are common to both layers)*/
         // F1: Random upper triangular matrix of dimensions v1 x v1
         UTMatrix F1 = new UTMatrix(R, R.v(1));
-        this.F[0] = (Matrix) F1;
+        this.F[0] = F1;
         // F2: Random matrix of dimensions v1  x o1.
         FullMatrix F2 = new FullMatrix(R, R.v(1), R.o(1)); // F2 of dims v1 x o1
         this.F[1] = F2;
@@ -77,23 +75,19 @@ public class RainbowPolynomial {
             // -- Creation of the needed auxiliar matrices
             FullMatrix T3T = T3.transpose(); // Transpose of T3
             FullMatrix E = B.add((FullMatrix) F(3));
+            FullMatrix G = A.mult(T2).add(E);
             FullMatrix F5sF5T = F5.add(F5.transpose());
             // -- creación de las matrices Q -- //
             // Q1 = F1;
             this.Q[0] = this.F(1);
-            assert this.Q[0].rows() == R.v(1) && this.Q[0].cols() == R.v(1);
             // Q2 = D;
             this.Q[1] = D;
-            assert this.Q[1].rows() == R.v(1) && this.Q[1].cols() == R.o(1);
             // Q3 = A * T2 + E.
-            this.Q[2] = A.mult(T2).add(E);
-            assert this.Q[2].rows() == R.v(1) && this.Q[2].cols() == R.o(2);
+            this.Q[2] = G;
             // Q5 = UT(T1T *(F1 * T1 + F2)).
             this.Q[3] = T1T.mult(F1.mult(T1).add(F2)).UT();
-            assert this.Q[3].rows() == R.o(1) && this.Q[3].cols() == R.o(1);
             // Q6 = (D + F2T) * T2 + T1T * E + (F5 + F5T) * T3 + F6 
-            this.Q[4] = D.add(F2.transpose()).mult(T2)
-                    .add(T1T.mult(E)).add(F5sF5T.mult(T3)).add(F6);
+            this.Q[4] = T1T.mult(G).add(F2.transpose().mult(T2)).add(F5sF5T.mult(T3)).add(F6);
             // Q9 = UI( T2T * (F1 * T2 + E) + T3T * (F5 * T3 + F6) )
             this.Q[5] = T2T.mult(F1.mult(T2).add(E)).add(T3T.mult(F5.mult(T3).add(F6))).UT();
         }
@@ -153,11 +147,12 @@ public class RainbowPolynomial {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        int i = 1;
         for (Matrix matrix : F) {
-            b.append("\nF").append(i).append(":\n");
-            b.append(matrix.toString());
-            i++;
+            if (matrix.getClass().toString().equals("UTMatrix")) {
+                b.append(((UTMatrix) matrix).toString());
+            } else {
+                b.append(matrix.toString());
+            }
         }
         return b.toString();
     }

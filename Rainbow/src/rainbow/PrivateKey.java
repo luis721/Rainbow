@@ -83,13 +83,10 @@ public class PrivateKey {
     public void writeToFile(String file) throws IOException {
         File f = new File(file);
         FileWriter w = new FileWriter(f);
-        //w.write("S: ");
-        //w.write(this.S.toString());
-        //w.write('\n');
-        //w.write("T: ");
-        //w.write(this.T.toString());
-        //w.write('\n');
-        w.write("F: ");
+        w.write(this.S.toString());
+        w.write('\n');
+        w.write(this.T.toString());
+        w.write('\n');
         w.write(this.F.toString());
         w.close();
     }
