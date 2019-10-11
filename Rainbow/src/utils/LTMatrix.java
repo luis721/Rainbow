@@ -15,17 +15,6 @@ public final class LTMatrix extends Matrix {
     private final int V[];
 
     /**
-     * Creates an empty n x n lower triangular matrix.
-     *
-     * @param F Field to where the matrix belongs.
-     * @param n Number of rows/cols of the matrix.
-     */
-    private LTMatrix(Field F, int n) {
-        this.n = n;
-        this.V = new int[n * (n + 1) / 2];
-    }
-
-    /**
      * Creates a lower triangular matrix that's equal to the transpose of the
      * upper triangular matrix received as parameter. i.e.: this = transpose(B).
      *

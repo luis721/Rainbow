@@ -42,18 +42,6 @@ public class FullMatrix extends Matrix {
         }
     }
 
-    public FullMatrix(Rainbow R, FullMatrix matrix) {
-        rows = matrix.rows();
-        cols = matrix.cols();
-        this.F = R.GF();
-        elements = new int[rows][cols];
-        for (int x = 0; x < rows; x++) {
-            for (int y = 0; y < cols; y++) {
-                elements[x][y] = matrix.getElement(x, y);
-            }
-        }
-    }
-
     /**
      * Creates an empty matrix of the given type, rows and cols, lying in the
      * given field F.
@@ -114,20 +102,6 @@ public class FullMatrix extends Matrix {
     public FullMatrix mult(FullMatrix B) {
         verifyMult(B);
         FullMatrix result = new FullMatrix(F, this.rows, B.cols());
-        if (this.rows == 0 || B.rows() == 0) {
-            throw new IllegalArgumentException("Matrix argument is empty, "
-                    + "operation cannot be performed.");
-        }
-
-        if (this.cols == 0 || B.cols() == 0) {
-            throw new IllegalArgumentException("Argument matrix has empty row, "
-                    + "operation cannot be performed.");
-        }
-
-        if (this.cols != B.rows()) {
-            throw new IllegalArgumentException("Argument matrices cannot be multiplied, "
-                    + "their dimensions are wrong.");
-        }
         for (int x = 0; x < this.rows; x++) {
             for (int y = 0; y < B.cols(); y++) {
                 int value = 0;

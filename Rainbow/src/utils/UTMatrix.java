@@ -168,6 +168,10 @@ public final class UTMatrix extends Matrix {
         return C;
     }
 
+    /**
+     * 
+     * @return Field in which the matrix is defined.
+     */
     public Field field() {
         return F;
     }
