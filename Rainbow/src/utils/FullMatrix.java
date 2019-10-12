@@ -76,12 +76,6 @@ public class FullMatrix extends Matrix {
 
     public FullMatrix add(FullMatrix B) {
         verifyAdd(B);
-        if (this.rows != B.rows) {
-            throw new IllegalArgumentException("Rows size must be the same.");
-        }
-        if (this.cols != B.cols) {
-            throw new IllegalArgumentException("Cols size must be the same.");
-        }
         FullMatrix result = new FullMatrix(F, this.rows, this.cols);
         for (int row = 0; row < this.rows; row++) {
             for (int col = 0; col < this.cols; col++) {
