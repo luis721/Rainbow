@@ -129,17 +129,8 @@ public class FullMatrix extends Matrix {
     }
 
     /**
-     *
-     * @return Number of columns of the matrix.
-     */
-    @Override
-    public int cols() {
-        return cols;
-    }
-
-    /**
      * Transforms the matrix to the upper triangular form.
-     *
+     * // needs to be redefined!!!
      * @return Matrix in Upper Triangular form.
      */
     public UTMatrix UT() {
@@ -147,72 +138,22 @@ public class FullMatrix extends Matrix {
             throw new UnsupportedOperationException("You can't UT a non-squared matrix");
         }
         UTMatrix result = new UTMatrix(F, rows);
-        for (int diagPos = 1; diagPos < Math.min(this.rows, this.cols) + 1; diagPos++) {
-            int value;
-            //find column with pivot, swap lines if necessary
-            int colPos = diagPos - 1;
-            while (colPos < this.cols && result.getElement(diagPos - 1, colPos) == 0) {
-                result = findPivot(result, colPos, diagPos - 1);
-                if (result.getElement(diagPos - 1, colPos) == 0) {
-                    colPos++;
-                }
-            }
-            if (colPos == this.cols) {
-                colPos = diagPos - 1;
-            }
-            for (int rowsUnderDiagPos = diagPos; rowsUnderDiagPos < this.rows; rowsUnderDiagPos++) {
-                try {
-                    //set value, it will be used to set column at diagPos to zero
-                    value = F.mult(result.getElement(rowsUnderDiagPos, colPos), F.inverse(result.getElement(diagPos - 1, colPos)));
-                    //subtract from line, pivot will be set to zero and other values will be edited
-                    for (int colsUnderDiagPos = diagPos - 1; colsUnderDiagPos < this.cols; colsUnderDiagPos++) {
-                        result.setElement(rowsUnderDiagPos, colsUnderDiagPos,
-                                F.add(F.mult(result.getElement(diagPos - 1, colsUnderDiagPos), value),
-                                        result.getElement(rowsUnderDiagPos, colsUnderDiagPos)));
-                    }
-                } catch (IllegalArgumentException ex) {
-                    //catched division by zero, OK, thrown by columns full of zeroes
-                }
+        for (int i = 0; i < rows; i++) {
+            for (int j = i; j < rows; j++) {
+                result.setElement(i, j, this.getElement(i, j));
             }
         }
-        //Result matrix is in row echelon form
+        //Result matrix is in UT form
         return result;
     }
 
-    private UTMatrix findPivot(UTMatrix matrix, int column, int row) {
-        for (int x = row; x < matrix.rows(); x++) {
-            for (int y = 0; y < column + 1; y++) {
-                if (matrix.getElement(x, y) != 0 && y == column) {
-                    return swapLines(matrix, row, x);
-                }
-                if (matrix.getElement(x, y) != 0) {
-                    break;
-                }
-            }
-        }
-        return matrix;
-    }
-
-    private UTMatrix swapLines(Matrix matrix, int row1, int row2) {
-        UTMatrix result = new UTMatrix(F, matrix.rows());
-        for (int x = 0; x < matrix.rows(); x++) {
-            if (x == row1) {
-                for (int y = 0; y < matrix.cols(); y++) {
-                    result.setElement(row1, y, matrix.getElement(row2, y));
-                }
-            }
-            if (x == row2) {
-                for (int y = 0; y < matrix.cols(); y++) {
-                    result.setElement(row2, y, matrix.getElement(row1, y));
-                }
-            }
-            if (x != row1 && x != row2) {
-                for (int y = 0; y < matrix.cols(); y++) {
-                    result.setElement(x, y, matrix.getElement(x, y));
-                }
-            }
-        }
-        return result;
+    /**
+     *
+     * @return Number of columns of the matrix.
+     */
+    @Override
+    public int cols() {
+        return cols;
     }
 
     /**
