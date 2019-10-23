@@ -9,6 +9,7 @@ public class BlockMatrix extends Matrix {
     private final Matrix[] M;
     private final int r;
     private final int c;
+    private final Field F;
 
     private class Coordinates {
 
@@ -25,10 +26,11 @@ public class BlockMatrix extends Matrix {
         }
     }
 
-    public BlockMatrix(int rows, int cols, Matrix... M) {
+    public BlockMatrix(Field F, int rows, int cols, Matrix... M) {
         this.r = rows;
         this.c = cols;
         this.M = M;
+        this.F = F;
     }
 
     @Override
@@ -45,11 +47,11 @@ public class BlockMatrix extends Matrix {
 
     private Coordinates getBlock(int i, int j) {
         int row = 0, col = 0, k = 0;
-        while (this.M[col].cols() < j) {
+        while (this.M[col].cols() <= j) {
             j -= this.M[col].cols();
             col++;
         }
-        while (this.M[row].rows() < i) {
+        while (this.M[row].rows() <= i) {
             i -= this.M[row].rows();
             row = row + this.c;
             k++;
@@ -57,14 +59,52 @@ public class BlockMatrix extends Matrix {
         return new Coordinates(i, j, col, k);
     }
 
+    public FullMatrix UT() {
+        int co = this.cols();
+        int ro = this.rows();
+        FullMatrix Mat = new FullMatrix(this.F, ro, co);
+        for (int i = 0; i < ro; i++) {
+            for (int j = 0; j < co; j++) {
+                Mat.setElement(i, j, this.getElement(i, j));
+                System.out.print(this.getElement(i, j) + "|");
+            }
+            System.out.println("");
+        }
+        System.out.println("ref");
+        for (int k = 0; k < co - 1; k++) {
+            for (int i = k + 1; i < ro; i++) {
+                int factor = this.F.div(Mat.getElement(i, k), Mat.getElement(k, k));
+                for (int j = k; j <= ro; j++) {
+                    Mat.setElement(i, j, this.F.add(Mat.getElement(i, j), this.F.mult(Mat.getElement(k, j), factor)));
+                }
+            }
+        }
+
+        for (int i = 0; i < ro; i++) {
+            for (int j = 0; j < co; j++) {
+                System.out.print(Mat.getElement(i, j) + "|");
+            }
+            System.out.println("");
+        }
+        return Mat;
+    }
+
     @Override
     public int rows() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int ro = 0;
+        for (int i = 0; i < this.r; i++) {
+            ro += this.M[i * this.r].rows();
+        }
+        return ro;
     }
 
     @Override
     public int cols() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int co = 0;
+        for (int i = 0; i < this.c; i++) {
+            co += this.M[i].cols();
+        }
+        return co;
     }
 
 }
