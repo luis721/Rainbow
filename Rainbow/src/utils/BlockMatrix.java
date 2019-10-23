@@ -66,25 +66,15 @@ public class BlockMatrix extends Matrix {
         for (int i = 0; i < ro; i++) {
             for (int j = 0; j < co; j++) {
                 Mat.setElement(i, j, this.getElement(i, j));
-                System.out.print(this.getElement(i, j) + "|");
             }
-            System.out.println("");
         }
-        System.out.println("ref");
-        for (int k = 0; k < co - 1; k++) {
+        for (int k = 0; k < co; k++) {
             for (int i = k + 1; i < ro; i++) {
                 int factor = this.F.div(Mat.getElement(i, k), Mat.getElement(k, k));
-                for (int j = k; j <= ro; j++) {
+                for (int j = k; j < co; j++) {
                     Mat.setElement(i, j, this.F.add(Mat.getElement(i, j), this.F.mult(Mat.getElement(k, j), factor)));
                 }
             }
-        }
-
-        for (int i = 0; i < ro; i++) {
-            for (int j = 0; j < co; j++) {
-                System.out.print(Mat.getElement(i, j) + "|");
-            }
-            System.out.println("");
         }
         return Mat;
     }
