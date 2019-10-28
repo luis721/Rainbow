@@ -53,13 +53,13 @@ public class RainbowMap {
             Matrix A1 = this.layers[0].coefficientMatrix(y);
             Matrix b1 = this.layers[0].constantPart(x, y);
             // system to solve for the first layer
-            y = new BlockMatrix(F, 1, 2, A1, b1).UT(y, Parameters.V1);
+            y = new BlockMatrix(F, 1, 2, A1, b1).Gauss(y, Parameters.V1);
             if (y != null) {
                 // Layer 2
                 Matrix A2 = this.layers[1].coefficientMatrix(y);
                 Matrix b2 = this.layers[1].constantPart(x, y);
                 // system to solve for the second layer
-                y = new BlockMatrix(F, 1, 2, A2, b2).UT(y, Parameters.V2);
+                y = new BlockMatrix(F, 1, 2, A2, b2).Gauss(y, Parameters.V2);
                 if (y != null) {
                     valid = true;
                 }

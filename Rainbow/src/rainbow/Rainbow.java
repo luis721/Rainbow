@@ -162,9 +162,12 @@ public final class Rainbow {
 
     public static void main(String[] args) throws IOException {
         Rainbow R = new Rainbow(Parameters.V1, Parameters.O1, Parameters.O2); // GF(256)
+        // Generates a random hashed document of size m
         int[] h = new int[Parameters.M];
         Arrays.setAll(h, i -> R.GF.getRandomNonZeroElement(new SecureRandom()));
+        // Generates the signature for h
         int[] s = R.signature(h);
+        // Shows the signature
         for (int i = 0; i < s.length; i++) {
             System.out.print(s[i] + " ");
         }
