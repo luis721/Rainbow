@@ -102,7 +102,7 @@ public class BlockMatrix extends Matrix {
         }
         // once the RREF is done, we retrieve the last column
         for (int i = 0; i < rows; i++) {
-            y[i] = Mat.getElement(i, cols - 1);
+            y[start + i] = Mat.getElement(i, cols - 1);
         }
         return y;
     }

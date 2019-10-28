@@ -1,5 +1,6 @@
 package rainbow;
 
+import java.security.SecureRandom;
 import utils.BlockMatrix;
 import utils.Field;
 import utils.Matrix;
@@ -47,7 +48,7 @@ public class RainbowMap {
             y = new int[Parameters.N];
             // initial random values. 
             for (int i = 0; i < Parameters.V1; i++) {
-                y[i] = 2;//F.getRandomNonZeroElement(new SecureRandom());
+                y[i] = F.getRandomNonZeroElement(new SecureRandom());
             }
             // Layer 1
             Matrix A1 = this.layers[0].coefficientMatrix(y);

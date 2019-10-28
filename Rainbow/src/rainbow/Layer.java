@@ -101,12 +101,15 @@ public class Layer {
         // A is a ol x o1 matrix
         // ol is the number of polynomials in the layer
         int ol = this.P.size();
+        int beta;
         Matrix A = new FullMatrix(F, ol, ol + 1);
+        int delta = Parameters.v(index);
         for (int k = 0; k < ol; k++) {
             for (int j = 0; j < ol; j++) {
                 int s = 0;
                 for (int i = 0; i < Parameters.v(index); i++) {
-                    s = F.add(s, F.mult(0, y[i])); // TODO GET BETA
+                    beta = this.P.get(Parameters.v(index) + 1 + k).getBeta(i, delta + j);
+                    s = F.add(s, F.mult(beta, y[i]));
                 }
                 A.setElement(k, j, s);
             }
@@ -133,9 +136,11 @@ public class Layer {
 
     private int c(int[] y, int k) {
         int ck = 0;
+        int alfa;
         for (int j = 0; j < Parameters.v(index); j++) {
             for (int i = 0; i < j; i++) {
-                ck = F.add(ck, F.mult(i, F.mult(y[i], y[j]))); // en i va alpha k(i,j)
+                alfa = this.P.get(k + 1).getAlpha(i, j);
+                ck = F.add(ck, F.mult(alfa, F.mult(y[i], y[j])));
             }
         }
         return ck;

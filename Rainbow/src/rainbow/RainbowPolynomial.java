@@ -12,6 +12,7 @@ public class RainbowPolynomial {
 
     private final Matrix[] F;
     private final Matrix[] Q;
+    private final int layer;
 
     public RainbowPolynomial(Rainbow R, int layer) {
         // Check if layer index is indeed valid
@@ -25,6 +26,7 @@ public class RainbowPolynomial {
         } else {
             this.F = new Matrix[5];
         }
+        this.layer = layer;
         // Matrices related to the affine map T
         AffineMapT T = R.T();
         FullMatrix T1 = T.T(1);
@@ -120,6 +122,49 @@ public class RainbowPolynomial {
                 throw new IllegalArgumentException("Index no válido.");
         }
         return Re;
+    }
+
+    /**
+     * Returns alpha(i,j).
+     *
+     * @param i
+     * @param j
+     * @return
+     */
+    public int getAlpha(int i, int j) {
+        if (this.layer == 1) {
+            return this.F(1).getElement(i, j);
+        } else { // layer == 2
+            if (i < Parameters.V1) {
+                if (j < Parameters.V1) {
+                    return this.F(1).getElement(i, j);
+                } else {
+                    return this.F(2).getElement(i, j - Parameters.V1);
+                }
+            } else {
+                return this.F(5).getElement(i - Parameters.V1, j - Parameters.V1);
+            }
+        }
+    }
+
+    /**
+     * Returns beta given i and j
+     *
+     * @param i
+     * @param j
+     * @return
+     */
+    public int getBeta(int i, int j) {
+        //System.out.println("i: " + i + " j: " + j);
+        if (this.layer == 1) {
+            return this.F(2).getElement(i, j - Parameters.V1);
+        } else { // layer == 2
+            if (i < Parameters.V1) {
+                return this.F(3).getElement(i, j - Parameters.V2);
+            } else {
+                return this.F(6).getElement(i - Parameters.V1, j - Parameters.V2);
+            }
+        }
     }
 
     /**
