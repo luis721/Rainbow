@@ -11,6 +11,7 @@ public class Parameters {
     public final static int O2 = 36;
     public final static int V2 = V1 + O1;
     public final static int N = V2 + O2;
+    public final static int M = O1 + O2;
 
     public static int v(int l) {
         switch (l) {

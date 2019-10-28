@@ -1,5 +1,6 @@
 package rainbow;
 
+import utils.Field;
 import utils.FullMatrix;
 
 /**
@@ -15,6 +16,7 @@ import utils.FullMatrix;
  */
 public class AffineMapT {
 
+    private final Field F;
     private final FullMatrix T1;
     private final FullMatrix T2;
     private final FullMatrix T3;
@@ -32,12 +34,15 @@ public class AffineMapT {
         this.T2 = new FullMatrix(R, R.v(1), R.o(2));
         // T3 is a o1 x o2 random matrix.
         this.T3 = new FullMatrix(R, R.o(1), R.o(2));
+        // Field
+        this.F = R.GF();
     }
 
-    private AffineMapT(FullMatrix T1, FullMatrix T2, FullMatrix T3) {
+    private AffineMapT(FullMatrix T1, FullMatrix T2, FullMatrix T3, Field F) {
         this.T1 = T1;
         this.T2 = T2;
         this.T3 = T3;
+        this.F = F;
     }
 
     /**
@@ -49,7 +54,7 @@ public class AffineMapT {
      */
     public AffineMapT inverse() {
         FullMatrix T4 = T1.mult(T3).add(T2);
-        return new AffineMapT(T1, T4, T3);
+        return new AffineMapT(T1, T4, T3, F);
     }
 
     /**
@@ -69,6 +74,43 @@ public class AffineMapT {
             default:
                 throw new IllegalArgumentException("Invalid index.");
         }
+    }
+
+    public int[] eval(int[] y) {
+        int[] z = new int[Parameters.N];
+        if (y.length != Parameters.N) {
+            throw new IllegalArgumentException("Array size must be " + Parameters.N);
+        }
+        // The identity is all ones.
+        for (int i = 0; i < Parameters.N; i++) {
+            z[i] = y[i];
+        }
+        int j;
+        for (int i = 0; i < Parameters.V2; i++) {
+            // First V1 rows of T
+            if (i < Parameters.V1) {
+                j = Parameters.V1;
+                // Multiplying T1 terms
+                while (j < Parameters.V2) {
+                    z[i] = F.add(z[i], F.mult(T1.getElement(i, j - Parameters.V1), y[j]));
+                    j++;
+                }
+                // Multiplying T2 (or T4) terms
+                while (j < Parameters.N) {
+                    z[i] = F.add(z[i], F.mult(T2.getElement(i, j - Parameters.V2), y[j]));
+                    j++;
+                }
+            } else {
+                // Multiplying T3 terms
+                j = Parameters.V2;
+                while (j < Parameters.N) {
+                    z[i] = F.add(z[i], F.mult(T3.getElement(i - Parameters.V1, j - Parameters.V2), y[j]));
+                    j++;
+                }
+
+            }
+        }
+        return z;
     }
 
     /**

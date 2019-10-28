@@ -2,6 +2,7 @@ package rainbow;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import utils.Field;
 
 /**
@@ -142,8 +143,31 @@ public final class Rainbow {
         return v[2];
     }
 
+    /**
+     * Signs an already hashed document d.so h = H(d). h must be an array of m
+     * items.
+     *
+     * @param h Hashed document of size m.
+     * @return Signature for the hashed document.
+     */
+    public int[] signature(int[] h) {
+        // asserts the document size is valid
+        if (h.length != m()) {
+            throw new IllegalArgumentException("The size of the document must be " + Parameters.M);
+        }
+        int[] x = this.S.eval(h);
+        int[] y = this.sk.getF().inverse(x);
+        return this.T.inverse().eval(y);
+    }
+
     public static void main(String[] args) throws IOException {
         Rainbow R = new Rainbow(Parameters.V1, Parameters.O1, Parameters.O2); // GF(256)
+        int[] h = new int[Parameters.M];
+        Arrays.setAll(h, i -> R.GF.getRandomNonZeroElement(new SecureRandom()));
+        int[] s = R.signature(h);
+        for (int i = 0; i < s.length; i++) {
+            System.out.print(s[i] + " ");
+        }
         R.getPk().writeToFile("public.key");
         R.getSk().writeToFile("private.key");
     }

@@ -126,7 +126,7 @@ public class Layer {
         Matrix b = new FullMatrix(F, Parameters.o(index), 1);
         for (int k = 0; k < Parameters.o(index); k++) {
             int r = Parameters.v(index) + k;
-            b.setElement(k, 1, F.add(x[r], c(y, r)));
+            b.setElement(k, 0, F.add(x[k], c(y, r)));
         }
         return b;
     }

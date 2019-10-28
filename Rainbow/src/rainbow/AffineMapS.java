@@ -1,5 +1,6 @@
 package rainbow;
 
+import utils.Field;
 import utils.FullMatrix;
 
 /**
@@ -10,6 +11,7 @@ import utils.FullMatrix;
 public class AffineMapS {
 
     private final FullMatrix Sp;
+    private final Field F;
 
     /**
      * Creates a random invertible affine map (S) of size m x m.
@@ -26,6 +28,7 @@ public class AffineMapS {
      */
     public AffineMapS(Rainbow R) {
         this.Sp = new FullMatrix(R, R.o(1), R.o(2));
+        this.F = R.GF();
     }
 
     /**
@@ -46,6 +49,30 @@ public class AffineMapS {
      */
     public AffineMapS inverse() {
         return this;
+    }
+
+    /**
+     * Calculates S(x).
+     *
+     * @param h
+     * @return S(x).
+     */
+    public int[] eval(int[] h) {
+        int[] x = new int[Parameters.M];
+        // given the form of S, this is multiplying the diagonal
+        // by h.
+        for (int i = 0; i < Parameters.M; i++) {
+            x[i] = h[i];
+        }
+        int j;
+        for (int i = 0; i < Parameters.O1; i++) {
+            j = Parameters.O1;
+            while (j < Parameters.O2) {
+                x[i] = F.add(x[i], F.mult(Sp.getElement(i, j), h[j]));
+                j++;
+            }
+        }
+        return x;
     }
 
     /**

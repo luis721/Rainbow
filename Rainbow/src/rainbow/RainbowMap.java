@@ -1,7 +1,5 @@
 package rainbow;
 
-import java.security.SecureRandom;
-import java.util.Arrays;
 import utils.BlockMatrix;
 import utils.Field;
 import utils.Matrix;
@@ -42,18 +40,22 @@ public class RainbowMap {
      * @return y such that F(y) = x.
      */
     public int[] inverse(int[] x) {
-        int[] y = new int[Parameters.N];
+        int[] y;
         // Create random values for (y1 ... yv1)
         boolean valid = false;
-        while (!valid) {
+        do {
+            y = new int[Parameters.N];
             // initial random values. 
-            // in spite that 
-            Arrays.setAll(y, i -> F.getRandomNonZeroElement(new SecureRandom()));
+            for (int i = 0; i < Parameters.V1; i++) {
+                y[i] = 2;//F.getRandomNonZeroElement(new SecureRandom());
+            }
+            // Layer 1
             Matrix A1 = this.layers[0].coefficientMatrix(y);
             Matrix b1 = this.layers[0].constantPart(x, y);
             // system to solve for the first layer
             y = new BlockMatrix(F, 1, 2, A1, b1).UT(y, Parameters.V1);
             if (y != null) {
+                // Layer 2
                 Matrix A2 = this.layers[1].coefficientMatrix(y);
                 Matrix b2 = this.layers[1].constantPart(x, y);
                 // system to solve for the second layer
@@ -62,7 +64,7 @@ public class RainbowMap {
                     valid = true;
                 }
             }
-        }
+        } while (!valid);
         return y;
     }
 

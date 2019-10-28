@@ -66,42 +66,25 @@ public class BlockMatrix extends Matrix {
      * @return
      */
     public int[] UT(int[] y, int start) {
-        int co = this.cols();
-        int ro = this.rows();
-        FullMatrix Mat = new FullMatrix(this.F, ro, co);
-        for (int i = 0; i < ro; i++) {
-            for (int j = 0; j < co; j++) {
+        int cols = this.cols();
+        int rows = this.rows();
+        FullMatrix Mat = new FullMatrix(this.F, rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 Mat.setElement(i, j, this.getElement(i, j));
             }
         }
-        for (int k = 0; k < co; k++) {
-            for (int i = k + 1; i < ro; i++) {
+        for (int k = 0; k < cols; k++) {
+            for (int i = k + 1; i < rows; i++) {
                 int factor = this.F.div(Mat.getElement(i, k), Mat.getElement(k, k));
-                for (int j = k; j < co; j++) {
+                for (int j = k; j < cols; j++) {
                     Mat.setElement(i, j, this.F.add(Mat.getElement(i, j), this.F.mult(Mat.getElement(k, j), factor)));
                 }
             }
         }
-        // once the RREF is done, we check if this was successfull
-        boolean valid = true;
-        int i = 0;
-        int j;
-        while (valid && i < ro) {
-            j = 0;
-            while (j < co && valid) {
-                if (i != j && Mat.getElement(i, j) != 0) {
-                    valid = false;
-                } else if (i == j && Mat.getElement(i, j) != 1) {
-                    valid = false;
-                }
-                j++;
-            }
-            // fills the next y values
-            y[start + i] = Mat.getElement(i, i);
-            i++;
-        }
-        if (!valid) { // returns null if the RREF was not done
-            return null;
+        // once the RREF is done, we retrieve the last column
+        for (int i = 0; i < rows; i++) {
+            y[i] = Mat.getElement(i, cols-1);
         }
         return y;
     }

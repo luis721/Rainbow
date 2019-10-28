@@ -46,7 +46,7 @@ public class Field extends GF2mField {
     public int mult(int a, int b) {
         return super.mult(a, b) & MASK;
     }
-    
+
     public int div(int a, int b) {
         return super.mult(a, super.inverse(b));
     }
