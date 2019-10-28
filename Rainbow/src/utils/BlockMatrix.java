@@ -59,7 +59,13 @@ public class BlockMatrix extends Matrix {
         return new Coordinates(i, j, col, k);
     }
 
-    public FullMatrix UT() {
+    /**
+     * Performs an RREF over the matrix.
+     *
+     * @param start
+     * @return
+     */
+    public int[] UT(int[] y, int start) {
         int co = this.cols();
         int ro = this.rows();
         FullMatrix Mat = new FullMatrix(this.F, ro, co);
@@ -76,7 +82,28 @@ public class BlockMatrix extends Matrix {
                 }
             }
         }
-        return Mat;
+        // once the RREF is done, we check if this was successfull
+        boolean valid = true;
+        int i = 0;
+        int j;
+        while (valid && i < ro) {
+            j = 0;
+            while (j < co && valid) {
+                if (i != j && Mat.getElement(i, j) != 0) {
+                    valid = false;
+                } else if (i == j && Mat.getElement(i, j) != 1) {
+                    valid = false;
+                }
+                j++;
+            }
+            // fills the next y values
+            y[start + i] = Mat.getElement(i, i);
+            i++;
+        }
+        if (!valid) { // returns null if the RREF was not done
+            return null;
+        }
+        return y;
     }
 
     @Override

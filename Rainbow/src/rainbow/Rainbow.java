@@ -143,8 +143,9 @@ public final class Rainbow {
     }
 
     public static void main(String[] args) throws IOException {
-        Rainbow R = new Rainbow(68, 36, 36); // GF(256)
+        Rainbow R = new Rainbow(Parameters.V1, Parameters.O1, Parameters.O2); // GF(256)
         R.getPk().writeToFile("public.key");
         R.getSk().writeToFile("private.key");
     }
+
 }

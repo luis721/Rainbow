@@ -3,6 +3,7 @@ package rainbow;
 import utils.FullMatrix;
 import java.util.HashMap;
 import java.util.Map;
+import utils.Field;
 import utils.Matrix;
 
 /**
@@ -14,8 +15,10 @@ public class Layer {
 
     // Stores the polynomials in form <key, value>
     // where the key is the polynomial index v1 + 1 <= k <= n
+    private final int index;
     private final HashMap<Integer, RainbowPolynomial> P;
     private final FullMatrix MQ;
+    private final Field F;
 
     /**
      * Creates an instance of a Rainbow layer.
@@ -24,10 +27,12 @@ public class Layer {
      * @param index Index of the layer. This may be 1 or 2.
      */
     public Layer(Rainbow R, int index) {
+        this.F = R.GF();
         // Check if layer index is indeed valid
         if (index <= 0 || index > 2) {
             throw new IllegalArgumentException("Invalid layer index.");
         }
+        this.index = index;
         // The hash map will store the polynomials that belong to the layer.
         this.P = new HashMap<>();
         // Contains the starting index of the polynomials in the layer
@@ -85,6 +90,55 @@ public class Layer {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * @param y is a vector of vl elements. Where l is the layer index;
+     * @return Coefficient matrix A for the central map inversion
+     */
+    public Matrix coefficientMatrix(int[] y) {
+        // A is a ol x o1 matrix
+        // ol is the number of polynomials in the layer
+        int ol = this.P.size();
+        Matrix A = new FullMatrix(F, ol, ol + 1);
+        for (int k = 0; k < ol; k++) {
+            for (int j = 0; j < ol; j++) {
+                int s = 0;
+                for (int i = 0; i < Parameters.v(index); i++) {
+                    s = F.add(s, F.mult(0, y[i])); // TODO GET BETA
+                }
+                A.setElement(k, j, s);
+            }
+        }
+        return A;
+    }
+
+    /**
+     * Calculates for vector (column matrix) of the linear system A*y = b;
+     * Recall b = x - c.
+     *
+     * @param x
+     * @param y Already known y values.
+     * @return Constant part. i.e.: the b in A*y=b.
+     */
+    public Matrix constantPart(int[] x, int[] y) {
+        Matrix b = new FullMatrix(F, Parameters.o(index), 1);
+        for (int k = 0; k < Parameters.o(index); k++) {
+            int r = Parameters.v(index) + k;
+            b.setElement(k, 1, F.add(x[r], c(y, r)));
+        }
+        return b;
+    }
+
+    private int c(int[] y, int k) {
+        int ck = 0;
+        for (int j = 0; j < Parameters.v(index); j++) {
+            for (int i = 0; i < j; i++) {
+                ck = F.add(ck, F.mult(i, F.mult(y[i], y[j]))); // en i va alpha k(i,j)
+            }
+        }
+        return ck;
     }
 
     /**
