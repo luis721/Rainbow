@@ -16,7 +16,6 @@ import utils.FullMatrix;
  */
 public class AffineMapT {
 
-    private final Field F;
     private final FullMatrix T1;
     private final FullMatrix T2;
     private final FullMatrix T3;
@@ -29,20 +28,17 @@ public class AffineMapT {
      */
     public AffineMapT(Rainbow R) {
         // T1 is a v1 x o1 random matrix.
-        this.T1 = new FullMatrix(R, R.v(1), R.o(1));
+        this.T1 = new FullMatrix(R, Parameters.V1, Parameters.O2);
         // T2 is a v1 x o2 random matrix.
-        this.T2 = new FullMatrix(R, R.v(1), R.o(2));
+        this.T2 = new FullMatrix(R, Parameters.V1, Parameters.O2);
         // T3 is a o1 x o2 random matrix.
-        this.T3 = new FullMatrix(R, R.o(1), R.o(2));
-        // Field
-        this.F = R.GF();
+        this.T3 = new FullMatrix(R, Parameters.O1, Parameters.O2);
     }
 
-    private AffineMapT(FullMatrix T1, FullMatrix T2, FullMatrix T3, Field F) {
+    private AffineMapT(FullMatrix T1, FullMatrix T2, FullMatrix T3) {
         this.T1 = T1;
         this.T2 = T2;
         this.T3 = T3;
-        this.F = F;
     }
 
     /**
@@ -54,7 +50,7 @@ public class AffineMapT {
      */
     public AffineMapT inverse() {
         FullMatrix T4 = T1.mult(T3).add(T2);
-        return new AffineMapT(T1, T4, T3, F);
+        return new AffineMapT(T1, T4, T3);
     }
 
     /**
@@ -77,6 +73,7 @@ public class AffineMapT {
     }
 
     public int[] eval(int[] y) {
+        Field F = Parameters.F;
         int[] z = new int[Parameters.N];
         if (y.length != Parameters.N) {
             throw new IllegalArgumentException("Array size must be " + Parameters.N);
@@ -135,3 +132,4 @@ public class AffineMapT {
     }
 
 }
+

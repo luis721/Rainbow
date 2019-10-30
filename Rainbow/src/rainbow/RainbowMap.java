@@ -16,7 +16,6 @@ import utils.Matrix;
 public class RainbowMap {
 
     private final Layer[] layers;
-    private final Field F;
 
     /**
      * Creates a Central Map based in the Rainbow instance.
@@ -27,7 +26,6 @@ public class RainbowMap {
      * the layers.
      */
     public RainbowMap(Rainbow R) {
-        this.F = R.GF();
         this.layers = new Layer[]{
             new Layer(R, 1),
             new Layer(R, 2)
@@ -48,19 +46,19 @@ public class RainbowMap {
             y = new int[Parameters.N];
             // initial random values. 
             for (int i = 0; i < Parameters.V1; i++) {
-                y[i] = F.getRandomNonZeroElement(new SecureRandom());
+                y[i] = Parameters.F.getRandomNonZeroElement(new SecureRandom());
             }
             // Layer 1
             Matrix A1 = this.layers[0].coefficientMatrix(y);
             Matrix b1 = this.layers[0].constantPart(x, y);
             // system to solve for the first layer
-            y = new BlockMatrix(F, 1, 2, A1, b1).Gauss(y, Parameters.V1);
+            y = new BlockMatrix(Parameters.F, 1, 2, A1, b1).Gauss(y, Parameters.V1);
             if (y != null) {
                 // Layer 2
                 Matrix A2 = this.layers[1].coefficientMatrix(y);
                 Matrix b2 = this.layers[1].constantPart(x, y);
                 // system to solve for the second layer
-                y = new BlockMatrix(F, 1, 2, A2, b2).Gauss(y, Parameters.V2);
+                y = new BlockMatrix(Parameters.F, 1, 2, A2, b2).Gauss(y, Parameters.V2);
                 if (y != null) {
                     valid = true;
                 }
@@ -93,3 +91,4 @@ public class RainbowMap {
     }
 
 }
+

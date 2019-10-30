@@ -3,6 +3,7 @@ package rainbow;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import utils.Field;
 import utils.FullMatrix;
 
 /**
@@ -48,6 +49,34 @@ public class PublicKey {
         return this.MP2;
     }
 
+    public boolean isValid(int[] z, int[] h) {
+        int[] v = this.eval(z);
+        int i = 0;
+        while (i < z.length) {
+            if (v[i] == h[i]) {
+                i++;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int[] eval(int[] z) {
+        Field F = Parameters.F;
+        int[] r = new int[Parameters.M];
+        for (int i = 0; i < Parameters.M; i++) {
+            r[i] = 0;
+            for (int j = 0; j < Parameters.O1; j++) {
+                r[i] = F.add(r[i], F.mult(this.MP1.getElement(i, j), z[i]));
+            }
+            for (int j = 0; j < Parameters.O2; j++) {
+                r[Parameters.O1 + i] = F.add(r[i], F.mult(this.MP2.getElement(i, j), z[i]));
+            }
+        }
+        return r;
+    }
+
     /**
      * This string representation is the representation of the two matrices MP1
      * and MP2 separated by an EOL.
@@ -70,8 +99,9 @@ public class PublicKey {
      */
     public void writeToFile(String file) throws IOException {
         File f = new File(file);
-        try ( FileWriter w = new FileWriter(f)) {
+        try (FileWriter w = new FileWriter(f)) {
             w.write(this.toString());
         }
     }
 }
+

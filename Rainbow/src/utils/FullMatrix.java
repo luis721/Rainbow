@@ -130,7 +130,7 @@ public class FullMatrix extends Matrix {
 
     /**
      * Transforms the matrix to the upper triangular form.
-     * // needs to be redefined!!!
+     *
      * @return Matrix in Upper Triangular form.
      */
     public UTMatrix UT() {
@@ -139,8 +139,10 @@ public class FullMatrix extends Matrix {
         }
         UTMatrix result = new UTMatrix(F, rows);
         for (int i = 0; i < rows; i++) {
-            for (int j = i; j < rows; j++) {
-                result.setElement(i, j, this.getElement(i, j));
+            // -- diagonal -- //
+            result.setElement(i, i, this.getElement(i, i));
+            for (int j = i + 1; j < rows; j++) {
+                result.setElement(i, j, this.getElement(i, j) + this.getElement(i, j));
             }
         }
         //Result matrix is in UT form
@@ -184,3 +186,5 @@ public class FullMatrix extends Matrix {
         return b.toString();
     }
 }
+
+

@@ -3,7 +3,6 @@ package rainbow;
 import utils.FullMatrix;
 import java.util.HashMap;
 import java.util.Map;
-import utils.Field;
 import utils.Matrix;
 
 /**
@@ -18,7 +17,6 @@ public class Layer {
     private final int index;
     private final HashMap<Integer, RainbowPolynomial> P;
     private final FullMatrix MQ;
-    private final Field F;
 
     /**
      * Creates an instance of a Rainbow layer.
@@ -27,7 +25,6 @@ public class Layer {
      * @param index Index of the layer. This may be 1 or 2.
      */
     public Layer(Rainbow R, int index) {
-        this.F = R.GF();
         // Check if layer index is indeed valid
         if (index <= 0 || index > 2) {
             throw new IllegalArgumentException("Invalid layer index.");
@@ -36,11 +33,11 @@ public class Layer {
         // The hash map will store the polynomials that belong to the layer.
         this.P = new HashMap<>();
         // Contains the starting index of the polynomials in the layer
-        int delta = R.v(index) + 1;
+        int delta = Parameters.v(index) + 1;
         RainbowPolynomial RP; // Avoiding temporal object creation in each iter
-        this.MQ = new FullMatrix(R.GF(), R.o(index), (R.n() * (R.n() + 1)) / 2);
+        this.MQ = new FullMatrix(Parameters.F, Parameters.o(index), (Parameters.N * (Parameters.N + 1)) / 2);
         // Creation of the polynomials of the layer
-        for (int i = R.v(index) + 1; i <= R.v(index + 1); i++) {
+        for (int i = Parameters.v(index) + 1; i <= Parameters.v(index + 1); i++) {
             RP = new RainbowPolynomial(R, index);
             P.put(i, RP);
         }
@@ -51,39 +48,39 @@ public class Layer {
         for (int f = 0; f < this.P.size(); f++) {
             int c = 0;
             RP = this.P.get(f + delta);
-            for (int i = 0; i < R.v(1); i++) {//Q1||Q2
-                for (j = i; j < R.v(1); j++) {
+            for (int i = 0; i < Parameters.V1; i++) {//Q1||Q2
+                for (j = i; j < Parameters.V1; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(1).getElement(i, j));
                     c++;
                 }
-                for (j = 0; j < R.o(1); j++) {
+                for (j = 0; j < Parameters.O1; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(2).getElement(i, j));
                     c++;
                 }
             }
-            for (int i = 0; i < R.v(1); i++) {//Q3
-                for (j = 0; j < R.o(2); j++) {
+            for (int i = 0; i < Parameters.V1; i++) {//Q3
+                for (j = 0; j < Parameters.O2; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(3).getElement(i, j));
                     c++;
                 }
             }
-            for (int i = 0; i < R.o(1); i++) {//Q5||Q6
-                for (j = i; j < R.o(1); j++) {
+            for (int i = 0; i < Parameters.O1; i++) {//Q5||Q6
+                for (j = i; j < Parameters.O1; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(5).getElement(i, j));
                     c++;
                 }
-                for (j = 0; j < R.o(2); j++) {
+                for (j = 0; j < Parameters.O2; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(6).getElement(i, j));
                     c++;
                 }
             }
-            for (int i = 0; i < R.o(2); i++) {//Q9
-                for (j = i; j < R.o(2); j++) {
+            for (int i = 0; i < Parameters.O2; i++) {//Q9
+                for (j = i; j < Parameters.O2; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(9).getElement(i, j));
                     c++;
@@ -102,14 +99,14 @@ public class Layer {
         // ol is the number of polynomials in the layer
         int ol = this.P.size();
         int beta;
-        Matrix A = new FullMatrix(F, ol, ol + 1);
+        Matrix A = new FullMatrix(Parameters.F, ol, ol + 1);
         int delta = Parameters.v(index);
         for (int k = 0; k < ol; k++) {
             for (int j = 0; j < ol; j++) {
                 int s = 0;
                 for (int i = 0; i < Parameters.v(index); i++) {
                     beta = this.P.get(Parameters.v(index) + 1 + k).getBeta(i, delta + j);
-                    s = F.add(s, F.mult(beta, y[i]));
+                    s = Parameters.F.add(s, Parameters.F.mult(beta, y[i]));
                 }
                 A.setElement(k, j, s);
             }
@@ -126,10 +123,10 @@ public class Layer {
      * @return Constant part. i.e.: the b in A*y=b.
      */
     public Matrix constantPart(int[] x, int[] y) {
-        Matrix b = new FullMatrix(F, Parameters.o(index), 1);
+        Matrix b = new FullMatrix(Parameters.F, Parameters.o(index), 1);
         for (int k = 0; k < Parameters.o(index); k++) {
             int r = Parameters.v(index) + k;
-            b.setElement(k, 0, F.add(x[k], c(y, r)));
+            b.setElement(k, 0, Parameters.F.add(x[k], c(y, r)));
         }
         return b;
     }
@@ -140,7 +137,7 @@ public class Layer {
         for (int j = 0; j < Parameters.v(index); j++) {
             for (int i = 0; i < j; i++) {
                 alfa = this.P.get(k + 1).getAlpha(i, j);
-                ck = F.add(ck, F.mult(alfa, F.mult(y[i], y[j])));
+                ck = Parameters.F.add(ck, Parameters.F.mult(alfa, Parameters.F.mult(y[i], y[j])));
             }
         }
         return ck;
@@ -172,3 +169,5 @@ public class Layer {
     }
 
 }
+
+

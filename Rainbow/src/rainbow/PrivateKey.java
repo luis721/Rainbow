@@ -64,6 +64,23 @@ public class PrivateKey {
     }
 
     /**
+     * Signs an already hashed document d. Thus h = H(d). h must be an 1D-array
+     * of m items.
+     *
+     * @param h Hashed document of size m.
+     * @return Signature for the hashed document.
+     */
+    public int[] signature(int[] h) {
+        // asserts the document size is valid
+        if (h.length != Parameters.M) {
+            throw new IllegalArgumentException("The size of the document must be " + Parameters.M);
+        }
+        int[] x = this.S.eval(h);
+        int[] y = this.F.inverse(x);
+        return this.T.inverse().eval(y);
+    }
+
+    /**
      * Stores the representation of the private key into a file.
      *
      * The first line * is the string representation for the invertible affine
@@ -92,3 +109,4 @@ public class PrivateKey {
     }
 
 }
+

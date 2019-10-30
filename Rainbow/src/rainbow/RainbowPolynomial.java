@@ -37,10 +37,10 @@ public class RainbowPolynomial {
         /* Two random submatrices for the polynomial 
          (These two random submatrices are common to both layers)*/
         // F1: Random upper triangular matrix of dimensions v1 x v1
-        UTMatrix F1 = new UTMatrix(R, R.v(1));
+        UTMatrix F1 = new UTMatrix(R, Parameters.v(1));
         this.F[0] = F1;
         // F2: Random matrix of dimensions v1  x o1.
-        FullMatrix F2 = new FullMatrix(R, R.v(1), R.o(1)); // F2 of dims v1 x o1
+        FullMatrix F2 = new FullMatrix(R, Parameters.v(1), Parameters.o(1)); // F2 of dims v1 x o1
         this.F[1] = F2;
         // -- auxiliar matrices used to reduce multiplications computation -- //
         FullMatrix A = F1.add(F1.transpose()); // A = F1 + F1T
@@ -67,12 +67,12 @@ public class RainbowPolynomial {
         } else { // -- Layer two -- //
             // -- creación de los bloques de la matriz del polinomio -- //
             // F3: Random matrix of dimensions v1 x o2.
-            this.F[2] = new FullMatrix(R, R.v(1), R.o(2));
+            this.F[2] = new FullMatrix(R, Parameters.v(1), Parameters.o(2));
             // F5: Random upper triangular matrix of dimensions o1 x o1.
-            UTMatrix F5 = new UTMatrix(R, R.o(1));
+            UTMatrix F5 = new UTMatrix(R, Parameters.o(1));
             this.F[3] = F5;
             // F6: Random  matrix of dimensions o1 x o2.
-            FullMatrix F6 = new FullMatrix(R, R.o(1), R.o(2));
+            FullMatrix F6 = new FullMatrix(R, Parameters.o(1), Parameters.o(2));
             F[4] = F6;
             // -- Creation of the needed auxiliar matrices
             FullMatrix T3T = T3.transpose(); // Transpose of T3
@@ -213,3 +213,4 @@ public class RainbowPolynomial {
     }
 
 }
+
