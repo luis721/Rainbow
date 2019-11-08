@@ -14,7 +14,7 @@ public class RainbowPolynomial {
     private final Matrix[] Q;
     private final int layer;
 
-    public RainbowPolynomial(Rainbow R, int layer) {
+    public RainbowPolynomial(RainbowKeyPairGenerator R, int layer) {
         // Check if layer index is indeed valid
         if (layer <= 0 || layer > 2) {
             throw new IllegalArgumentException("Invalid layer index.");

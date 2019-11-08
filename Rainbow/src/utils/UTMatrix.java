@@ -1,7 +1,7 @@
 package utils;
 
 import org.bouncycastle.util.encoders.Hex;
-import rainbow.Rainbow;
+import rainbow.RainbowKeyPairGenerator;
 
 /**
  * This class describes upper triangular matrices.
@@ -25,7 +25,7 @@ public final class UTMatrix extends Matrix {
      * @param R Rainbow instance used to generate the random items.
      * @param n Number of ros/columns of the matrix.
      */
-    public UTMatrix(Rainbow R, int n) {
+    public UTMatrix(RainbowKeyPairGenerator R, int n) {
         this.n = n;
         this.V = new int[n * (n + 1) / 2];
         this.F = R.GF();

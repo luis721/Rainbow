@@ -1,7 +1,7 @@
 package utils;
 
 import org.bouncycastle.util.encoders.Hex;
-import rainbow.Rainbow;
+import rainbow.RainbowKeyPairGenerator;
 
 /**
  *
@@ -25,7 +25,7 @@ public class FullMatrix extends Matrix {
      * @param rows Number of rows
      * @param cols Number of columns
      */
-    public FullMatrix(Rainbow R, int rows, int cols) {
+    public FullMatrix(RainbowKeyPairGenerator R, int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.elements = new int[rows][cols];

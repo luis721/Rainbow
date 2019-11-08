@@ -2,7 +2,6 @@ package rainbow;
 
 import java.security.SecureRandom;
 import utils.BlockMatrix;
-import utils.Field;
 import utils.Matrix;
 
 /**
@@ -25,7 +24,7 @@ public class RainbowMap {
      * @param R Rainbow instance used to generate each of the random elements in
      * the layers.
      */
-    public RainbowMap(Rainbow R) {
+    public RainbowMap(RainbowKeyPairGenerator R) {
         this.layers = new Layer[]{
             new Layer(R, 1),
             new Layer(R, 2)

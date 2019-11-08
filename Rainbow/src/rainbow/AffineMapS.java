@@ -24,7 +24,7 @@ public class AffineMapS {
      * @param R Rainbow instance used to generate the random elements of the
      * matrix.
      */
-    public AffineMapS(Rainbow R) {
+    public AffineMapS(RainbowKeyPairGenerator R) {
         this.Sp = new FullMatrix(R, Parameters.O1, Parameters.O2);
     }
 

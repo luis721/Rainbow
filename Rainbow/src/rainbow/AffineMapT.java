@@ -23,10 +23,10 @@ public class AffineMapT {
     /**
      * Creates an invertible random affine map (T) of size n x n.
      *
-     * @param R Rainbow instance used to generate the random elements in the
+     * @param R Rainbow key pair generator instance used to generate the random elements in the
      * matrices T1, T2 and T3.
      */
-    public AffineMapT(Rainbow R) {
+    public AffineMapT(RainbowKeyPairGenerator R) {
         // T1 is a v1 x o1 random matrix.
         this.T1 = new FullMatrix(R, Parameters.V1, Parameters.O2);
         // T2 is a v1 x o2 random matrix.

@@ -6,15 +6,13 @@ import java.util.Arrays;
 import utils.Field;
 
 /**
- * Rainbow instance.
+ * Rainbow key pair generator.
  *
  * @author mlcarcamo
  */
-public final class Rainbow {
+public final class RainbowKeyPairGenerator {
 
     private final SecureRandom sr;
-    private final AffineMapT T;
-    private final AffineMapS S;
     private final PublicKey pk;
     private final PrivateKey sk;
 
@@ -25,21 +23,21 @@ public final class Rainbow {
      * @param o1 Number of polynomials in the first layer.
      * @param o2 Number of polynomials in the second layer.
      */
-    public Rainbow(int v1, int o1, int o2) {
+    public RainbowKeyPairGenerator(int v1, int o1, int o2) {
         // Generation of the 256-bits random seed.
         byte[] seed = seed(256);
         // Creation of the PRNG with the obtained seed for the creation of 
         // the elements of the field.
         this.sr = new SecureRandom(seed);
         // Creation of the random invertible affine maps.
-        this.S = new AffineMapS(this); // Random invertible affine map S.
-        this.T = new AffineMapT(this); // Random invertible affine map T.
+        AffineMapS S = new AffineMapS(this); // Random invertible affine map S.
+        AffineMapT T = new AffineMapT(this); // Random invertible affine map T.
         // Creation of the central map.
         RainbowMap F = new RainbowMap(this);
         // Creation of the Private key
         this.sk = new PrivateKey(F, T, S);
         // Creation of the public key.
-        this.pk = new PublicKey(F, this.S.S1());
+        this.pk = new PublicKey(F, S.S1());
     }
 
     /**
@@ -63,7 +61,7 @@ public final class Rainbow {
      * @return Invertible affine map T.
      */
     public AffineMapT T() {
-        return this.T;
+        return sk.getT();
     }
 
     /**
@@ -92,7 +90,7 @@ public final class Rainbow {
     }
 
     public static void main(String[] args) throws IOException {
-        Rainbow R = new Rainbow(Parameters.V1, Parameters.O1, Parameters.O2); // GF(256)
+        RainbowKeyPairGenerator R = new RainbowKeyPairGenerator(Parameters.V1, Parameters.O1, Parameters.O2); // GF(256)
         // Generates a random hashed document of size m
         int[] h = new int[Parameters.M];
         Arrays.setAll(h, i -> Parameters.F.getRandomNonZeroElement(new SecureRandom()));
@@ -110,6 +108,3 @@ public final class Rainbow {
     }
 
 }
-
-
-

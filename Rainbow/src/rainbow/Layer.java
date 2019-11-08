@@ -21,10 +21,10 @@ public class Layer {
     /**
      * Creates an instance of a Rainbow layer.
      *
-     * @param R Rainbow instance.
+     * @param R Rainbow key pair generator instance.
      * @param index Index of the layer. This may be 1 or 2.
      */
-    public Layer(Rainbow R, int index) {
+    public Layer(RainbowKeyPairGenerator R, int index) {
         // Check if layer index is indeed valid
         if (index <= 0 || index > 2) {
             throw new IllegalArgumentException("Invalid layer index.");
