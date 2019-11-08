@@ -1,8 +1,6 @@
 package rainbow;
 
-import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import utils.Field;
 
 /**
@@ -17,13 +15,11 @@ public final class RainbowKeyPairGenerator {
     private final PrivateKey sk;
 
     /**
-     * Creates a new Rainbow instance.
+     * Creates a new Rainbow instance based inhe parameters established in the
+     * static class Parameters.
      *
-     * @param v1
-     * @param o1 Number of polynomials in the first layer.
-     * @param o2 Number of polynomials in the second layer.
      */
-    public RainbowKeyPairGenerator(int v1, int o1, int o2) {
+    public RainbowKeyPairGenerator() {
         // Generation of the 256-bits random seed.
         byte[] seed = seed(256);
         // Creation of the PRNG with the obtained seed for the creation of 
@@ -87,24 +83,6 @@ public final class RainbowKeyPairGenerator {
      */
     public PrivateKey getSk() {
         return this.sk;
-    }
-
-    public static void main(String[] args) throws IOException {
-        RainbowKeyPairGenerator R = new RainbowKeyPairGenerator(Parameters.V1, Parameters.O1, Parameters.O2); // GF(256)
-        // Generates a random hashed document of size m
-        int[] h = new int[Parameters.M];
-        Arrays.setAll(h, i -> Parameters.F.getRandomNonZeroElement(new SecureRandom()));
-        // Generates the signature for h
-        int[] s = R.sk.signature(h);
-        // Shows the signature
-        for (int i = 0; i < s.length; i++) {
-            System.out.print(s[i] + " ");
-        }
-        System.out.println("¿Es valida?");
-        System.out.println(R.pk.isValid(s, h));
-        System.out.println("");
-        R.getPk().writeToFile("public.key");
-        R.getSk().writeToFile("private.key");
     }
 
 }
