@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author usuario
+ * @author mlcarcamo
  */
 public class Rainbow {
 
@@ -22,7 +22,7 @@ public class Rainbow {
         for (int i = 0; i < s.length; i++) {
             System.out.print(s[i] + " ");
         }
-        System.out.println("¿Es valida?");
+        System.out.println("\n¿Es valida?");
         System.out.println(R.getPk().isValid(s, h));
         System.out.println("");
         R.getPk().writeToFile("public.key");

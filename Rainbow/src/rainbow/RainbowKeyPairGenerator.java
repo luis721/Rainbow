@@ -29,7 +29,7 @@ public final class RainbowKeyPairGenerator {
         AffineMapS S = new AffineMapS(this); // Random invertible affine map S.
         AffineMapT T = new AffineMapT(this); // Random invertible affine map T.
         // Creation of the central map.
-        RainbowMap F = new RainbowMap(this);
+        RainbowMap F = new RainbowMap(this, T);
         // Creation of the Private key
         this.sk = new PrivateKey(F, T, S);
         // Creation of the public key.
@@ -50,14 +50,6 @@ public final class RainbowKeyPairGenerator {
 
     public Field GF() {
         return Parameters.F;
-    }
-
-    /**
-     *
-     * @return Invertible affine map T.
-     */
-    public AffineMapT T() {
-        return sk.getT();
     }
 
     /**
