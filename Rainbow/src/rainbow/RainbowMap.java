@@ -1,8 +1,7 @@
 package rainbow;
 
 import java.security.SecureRandom;
-import utils.BlockMatrix;
-import utils.Matrix;
+import utils.ComputeInField;
 
 /**
  * This class represents the Rainbow Central map.
@@ -39,27 +38,37 @@ public class RainbowMap {
      * @return y such that F(y) = x.
      */
     public int[] inverse(int[] x) {
-        int[] y;
+        int[] y = new int[Parameters.N];
         // Create random values for (y1 ... yv1)
         boolean valid = false;
+        int[] yp;
         do {
-            y = new int[Parameters.N];
             // initial random values. 
             for (int i = 0; i < Parameters.V1; i++) {
                 y[i] = Parameters.F.getRandomNonZeroElement(new SecureRandom());
             }
             // Layer 1
-            Matrix A1 = this.layers[0].coefficientMatrix(y);
-            Matrix b1 = this.layers[0].constantPart(x, y);
+            int[][] A1 = this.layers[0].coefficientMatrix(y);
+            int[] b1 = this.layers[0].constantPart(x, y);
             // system to solve for the first layer
-            y = new BlockMatrix(Parameters.F, 1, 2, A1, b1).Gauss(y, Parameters.V1);
-            if (y != null) {
+            ComputeInField C = new ComputeInField();
+            yp = C.solveEquation(A1, b1);
+            if (yp != null) {
+                for (int i = Parameters.V1; i < Parameters.V2; i++) {
+                    if (y[i] != 0) {
+                        System.out.println("HIHIHIHI");
+                    }
+                    y[i] = yp[i - Parameters.V1];
+                }
                 // Layer 2
-                Matrix A2 = this.layers[1].coefficientMatrix(y);
-                Matrix b2 = this.layers[1].constantPart(x, y);
+                int[][] A2 = this.layers[1].coefficientMatrix(y);
+                int[] b2 = this.layers[1].constantPart(x, y);
                 // system to solve for the second layer
-                y = new BlockMatrix(Parameters.F, 1, 2, A2, b2).Gauss(y, Parameters.V2);
-                if (y != null) {
+                yp = C.solveEquation(A2, b2);
+                if (yp != null) {
+                    for (int i = Parameters.V2; i < Parameters.N; i++) {
+                        y[i] = yp[i - Parameters.V2];
+                    }
                     valid = true;
                 }
             }
@@ -91,3 +100,6 @@ public class RainbowMap {
     }
 
 }
+
+
+

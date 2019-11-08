@@ -94,12 +94,12 @@ public class Layer {
      * @param y is a vector of vl elements. Where l is the layer index;
      * @return Coefficient matrix A for the central map inversion
      */
-    public Matrix coefficientMatrix(int[] y) {
+    public int[][] coefficientMatrix(int[] y) {
         // A is a ol x o1 matrix
         // ol is the number of polynomials in the layer
         int ol = this.P.size();
         int beta;
-        Matrix A = new FullMatrix(Parameters.F, ol, ol + 1);
+        int[][] A = new int[ol][ol];
         int delta = Parameters.v(index);
         for (int k = 0; k < ol; k++) {
             for (int j = 0; j < ol; j++) {
@@ -108,7 +108,7 @@ public class Layer {
                     beta = this.P.get(Parameters.v(index) + 1 + k).getBeta(i, delta + j);
                     s = Parameters.F.add(s, Parameters.F.mult(beta, y[i]));
                 }
-                A.setElement(k, j, s);
+                A[k][j] = s;
             }
         }
         return A;
@@ -122,11 +122,11 @@ public class Layer {
      * @param y Already known y values.
      * @return Constant part. i.e.: the b in A*y=b.
      */
-    public Matrix constantPart(int[] x, int[] y) {
-        Matrix b = new FullMatrix(Parameters.F, Parameters.o(index), 1);
+    public int[] constantPart(int[] x, int[] y) {
+        int[] b = new int[Parameters.O1];
         for (int k = 0; k < Parameters.o(index); k++) {
             int r = Parameters.v(index) + k;
-            b.setElement(k, 0, Parameters.F.add(x[k], c(y, r)));
+            b[k] = Parameters.F.add(x[k], c(y, r));
         }
         return b;
     }
@@ -169,3 +169,4 @@ public class Layer {
     }
 
 }
+
