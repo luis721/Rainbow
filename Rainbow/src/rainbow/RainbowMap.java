@@ -23,11 +23,12 @@ public class RainbowMap {
      *
      * @param R Rainbow instance used to generate each of the random elements in
      * the layers.
+     * @param T Affine Map T
      */
-    public RainbowMap(RainbowKeyPairGenerator R) {
+    public RainbowMap(RainbowKeyPairGenerator R, AffineMapT T) {
         this.layers = new Layer[]{
-            new Layer(R, 1),
-            new Layer(R, 2)
+            new Layer(R, T, 1),
+            new Layer(R, T, 2)
         };
     }
 
@@ -90,4 +91,3 @@ public class RainbowMap {
     }
 
 }
-

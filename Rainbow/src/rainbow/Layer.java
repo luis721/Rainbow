@@ -24,7 +24,7 @@ public class Layer {
      * @param R Rainbow key pair generator instance.
      * @param index Index of the layer. This may be 1 or 2.
      */
-    public Layer(RainbowKeyPairGenerator R, int index) {
+    public Layer(RainbowKeyPairGenerator R, AffineMapT T, int index) {
         // Check if layer index is indeed valid
         if (index <= 0 || index > 2) {
             throw new IllegalArgumentException("Invalid layer index.");
@@ -38,7 +38,7 @@ public class Layer {
         this.MQ = new FullMatrix(Parameters.F, Parameters.o(index), (Parameters.N * (Parameters.N + 1)) / 2);
         // Creation of the polynomials of the layer
         for (int i = Parameters.v(index) + 1; i <= Parameters.v(index + 1); i++) {
-            RP = new RainbowPolynomial(R, index);
+            RP = new RainbowPolynomial(R, T, index);
             P.put(i, RP);
         }
         // Creation of matrix MQ for the layer.
@@ -169,5 +169,3 @@ public class Layer {
     }
 
 }
-
-

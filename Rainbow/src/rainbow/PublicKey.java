@@ -33,30 +33,29 @@ public class PublicKey {
         this.MP2 = MQ2;
     }
 
-    /**
-     *
-     * @return First matrix of the public key.
-     */
-    public FullMatrix MP1() {
-        return this.MP1;
-    }
-
-    /**
-     *
-     * @return Second matrix of the public key.
-     */
-    public FullMatrix MP2() {
-        return this.MP2;
+    private int getElement(int i, int j) {
+        if (i < 0 || j < 0) {
+            throw new IllegalArgumentException("Index must not be non-negative.");
+        }
+        if (i >= Parameters.M) {
+            throw new IllegalArgumentException("Row index must not me equal to or exceed " + Parameters.M);
+        }
+        if (i < Parameters.O1) {
+            return this.MP1.getElement(i, j);
+        } else {
+            return this.MP2.getElement(i - Parameters.O1, j);
+        }
     }
 
     public boolean isValid(int[] z, int[] h) {
         int[] v = this.eval(z);
         int i = 0;
-        while (i < z.length) {
+        while (i < v.length) {
             if (v[i] == h[i]) {
+                System.out.printf("v[%d] == h[%d]\n", i, i);
                 i++;
             } else {
-                return false;
+                i++;
             }
         }
         return true;
@@ -65,13 +64,45 @@ public class PublicKey {
     private int[] eval(int[] z) {
         Field F = Parameters.F;
         int[] r = new int[Parameters.M];
-        for (int i = 0; i < Parameters.M; i++) {
-            r[i] = 0;
-            for (int j = 0; j < Parameters.O1; j++) {
-                r[i] = F.add(r[i], F.mult(this.MP1.getElement(i, j), z[i]));
+        int s;
+        for (int k = 0; k < Parameters.M; k++) {
+            r[k] = 0;
+            int col = 0;
+            // Q1 || Q2
+            for (int i = 0; i < Parameters.V1; i++) {
+                s = 0;
+                for (int j = i; j < Parameters.V2; j++) {
+                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
+                    col++;
+                }
+                r[k] = F.add(r[k], F.mult(z[i], s));
             }
-            for (int j = 0; j < Parameters.O2; j++) {
-                r[Parameters.O1 + i] = F.add(r[i], F.mult(this.MP2.getElement(i, j), z[i]));
+            //  Q3
+            for (int i = 0; i < Parameters.V1; i++) {
+                s = 0;
+                for (int j = Parameters.V2; j < Parameters.N; j++) {
+                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
+                    col++;
+                }
+                r[k] = F.add(r[k], F.mult(z[i], s));
+            }
+            // Q5 || Q6
+            for (int i = Parameters.V1; i < Parameters.V2; i++) {
+                s = 0;
+                for (int j = i; j < Parameters.N; j++) {
+                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
+                    col++;
+                }
+                r[k] = F.add(r[k], F.mult(z[i], s));
+            }
+            // Q9
+            for (int i = Parameters.V2; i < Parameters.N; i++) {
+                s = 0;
+                for (int j = i; j < Parameters.N; j++) {
+                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
+                    col++;
+                }
+                r[k] = F.add(r[k], F.mult(z[i], s));
             }
         }
         return r;
@@ -104,4 +135,3 @@ public class PublicKey {
         }
     }
 }
-
