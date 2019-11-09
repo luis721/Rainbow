@@ -15,7 +15,7 @@ public class Rainbow {
         RainbowKeyPairGenerator R = new RainbowKeyPairGenerator();
         // Generates a random hashed document of size m
         int[] h = new int[Parameters.M];
-        Arrays.setAll(h, i -> Parameters.F.getRandomNonZeroElement(new SecureRandom()));
+        Arrays.setAll(h, i -> 0);
         // Generates the signature for h
         int[] s = R.getSk().signature(h);
         // Shows the signature

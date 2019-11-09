@@ -193,6 +193,7 @@ public final class UTMatrix extends Matrix {
     }
 
     private int getPosition(int i, int j) {
+        assert (0 <= i && i <= this.rows() && 0 <= j && j <= this.cols());
         return n * i - Math.floorDiv((i - 1) * i, 2) + (j - i);
     }
 

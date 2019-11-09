@@ -53,13 +53,13 @@ public class RainbowPolynomial {
         if (layer == 1) {
             // Q1 = F1.
             this.Q[0] = this.F(1);
-            // Q2 = C + F2;
+            // Q2 = D;
             this.Q[1] = D;
             // Q3 = A*T2 + B;
             this.Q[2] = A.mult(T2).add(B);
             // Q5 = UT(T1T * (F1 * T1 + F2))
             this.Q[3] = T1T.mult(F1.mult(T1).add(F2)).UT();
-            // Q6 = Q2T * T2  + T1T * B;
+            // Q6 = D' * T2  + T1T * B;
             this.Q[4] = D.transpose().mult(T2).add(T1T.mult(B));
             // Q9 = UT(T2T  * (F1 * T2 + B))
             this.Q[5] = T2T.mult(F1.mult(T2).add(B)).UT();

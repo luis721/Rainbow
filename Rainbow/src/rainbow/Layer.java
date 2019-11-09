@@ -3,6 +3,7 @@ package rainbow;
 import utils.FullMatrix;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Represents the layers in the Rainbow scheme.
@@ -14,7 +15,7 @@ public class Layer {
     // Stores the polynomials in form <key, value>
     // where the key is the polynomial index v1 + 1 <= k <= n
     private final int index;
-    private final HashMap<Integer, RainbowPolynomial> P;
+    private final Map<Integer, RainbowPolynomial> P;
     private final FullMatrix MQ;
 
     /**
@@ -31,22 +32,22 @@ public class Layer {
         }
         this.index = index;
         // The hash map will store the polynomials that belong to the layer.
-        this.P = new HashMap<>();
+        this.P = new TreeMap<>();
         // Contains the starting index of the polynomials in the layer
         int delta = Parameters.v(index) + 1;
-        RainbowPolynomial RP; // Avoiding temporal object creation in each iter
-        this.MQ = new FullMatrix(Parameters.F, Parameters.o(index), (Parameters.N * (Parameters.N + 1)) / 2);
+        this.MQ = new FullMatrix(Parameters.F, Parameters.o(index), Math.floorDiv(Parameters.N * (Parameters.N + 1), 2));
         // Creation of the polynomials of the layer
         for (int i = Parameters.v(index) + 1; i <= Parameters.v(index + 1); i++) {
-            RP = new RainbowPolynomial(R, T, index);
-            P.put(i, RP);
+            P.put(i, new RainbowPolynomial(R, T, index));
         }
         // Creation of matrix MQ for the layer.
         // Each matrix Q of the polynomials is inserted in a matrix MQ.
         // The way this is done is described in the report.
+        //RainbowPolynomial RP; // Avoiding temporal object creation in each iter
+        assert ((this.P.size() == Parameters.O1 && index == 1) || (this.P.size() == Parameters.O2 && index == 2));
         for (int f = 0; f < this.P.size(); f++) {
             int c = 0;
-            RP = this.P.get(f + delta);
+            RainbowPolynomial RP = this.P.get(f + delta);
             for (int i = 0; i < Parameters.V1; i++) {//Q1||Q2
                 for (int j = i; j < Parameters.V1; j++) {
                     assert MQ.getElement(f, c) == 0;
@@ -124,7 +125,7 @@ public class Layer {
     public int[] constantPart(int[] x, int[] y) {
         int[] b = new int[Parameters.O1];
         for (int k = 0; k < Parameters.o(index); k++) {
-            int r = Parameters.v(index) + k;
+            int r = Parameters.v(index) + 1 + k;
             b[k] = Parameters.F.add(x[k], c(y, r));
         }
         return b;
@@ -135,7 +136,7 @@ public class Layer {
         int alfa;
         for (int j = 0; j < Parameters.v(index); j++) {
             for (int i = 0; i < j; i++) {
-                alfa = this.P.get(k + 1).getAlpha(i, j);
+                alfa = this.P.get(k).getAlpha(i, j);
                 ck = Parameters.F.add(ck, Parameters.F.mult(alfa, Parameters.F.mult(y[i], y[j])));
             }
         }
@@ -168,4 +169,3 @@ public class Layer {
     }
 
 }
-

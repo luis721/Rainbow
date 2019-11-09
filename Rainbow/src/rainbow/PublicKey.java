@@ -64,45 +64,14 @@ public class PublicKey {
     private int[] eval(int[] z) {
         Field F = Parameters.F;
         int[] r = new int[Parameters.M];
-        int s;
         for (int k = 0; k < Parameters.M; k++) {
             r[k] = 0;
             int col = 0;
-            // Q1 || Q2
-            for (int i = 0; i < Parameters.V1; i++) {
-                s = 0;
-                for (int j = i; j < Parameters.V2; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
-                    col++;
-                }
-                r[k] = F.add(r[k], F.mult(z[i], s));
-            }
-            //  Q3
-            for (int i = 0; i < Parameters.V1; i++) {
-                s = 0;
-                for (int j = Parameters.V2; j < Parameters.N; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
-                    col++;
-                }
-                r[k] = F.add(r[k], F.mult(z[i], s));
-            }
-            // Q5 || Q6
-            for (int i = Parameters.V1; i < Parameters.V2; i++) {
-                s = 0;
+            for (int i = 0; i < Parameters.N; i++) {
                 for (int j = i; j < Parameters.N; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
+                    r[k] = F.add(r[k], F.mult(this.getElement(k, col), F.mult(z[i], z[j])));
                     col++;
                 }
-                r[k] = F.add(r[k], F.mult(z[i], s));
-            }
-            // Q9
-            for (int i = Parameters.V2; i < Parameters.N; i++) {
-                s = 0;
-                for (int j = i; j < Parameters.N; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
-                    col++;
-                }
-                r[k] = F.add(r[k], F.mult(z[i], s));
             }
         }
         return r;
