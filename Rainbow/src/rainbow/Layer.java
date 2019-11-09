@@ -3,7 +3,6 @@ package rainbow;
 import utils.FullMatrix;
 import java.util.HashMap;
 import java.util.Map;
-import utils.Matrix;
 
 /**
  * Represents the layers in the Rainbow scheme.
@@ -22,6 +21,7 @@ public class Layer {
      * Creates an instance of a Rainbow layer.
      *
      * @param R Rainbow key pair generator instance.
+     * @param T
      * @param index Index of the layer. This may be 1 or 2.
      */
     public Layer(RainbowKeyPairGenerator R, AffineMapT T, int index) {
@@ -44,43 +44,42 @@ public class Layer {
         // Creation of matrix MQ for the layer.
         // Each matrix Q of the polynomials is inserted in a matrix MQ.
         // The way this is done is described in the report.
-        int j;
         for (int f = 0; f < this.P.size(); f++) {
             int c = 0;
             RP = this.P.get(f + delta);
             for (int i = 0; i < Parameters.V1; i++) {//Q1||Q2
-                for (j = i; j < Parameters.V1; j++) {
+                for (int j = i; j < Parameters.V1; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(1).getElement(i, j));
                     c++;
                 }
-                for (j = 0; j < Parameters.O1; j++) {
+                for (int j = 0; j < Parameters.O1; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(2).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < Parameters.V1; i++) {//Q3
-                for (j = 0; j < Parameters.O2; j++) {
+                for (int j = 0; j < Parameters.O2; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(3).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < Parameters.O1; i++) {//Q5||Q6
-                for (j = i; j < Parameters.O1; j++) {
+                for (int j = i; j < Parameters.O1; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(5).getElement(i, j));
                     c++;
                 }
-                for (j = 0; j < Parameters.O2; j++) {
+                for (int j = 0; j < Parameters.O2; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(6).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < Parameters.O2; i++) {//Q9
-                for (j = i; j < Parameters.O2; j++) {
+                for (int j = i; j < Parameters.O2; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(9).getElement(i, j));
                     c++;

@@ -36,10 +36,10 @@ public class RainbowPolynomial {
         /* Two random submatrices for the polynomial 
          (These two random submatrices are common to both layers)*/
         // F1: Random upper triangular matrix of dimensions v1 x v1
-        UTMatrix F1 = new UTMatrix(R, Parameters.v(1));
+        UTMatrix F1 = new UTMatrix(R, Parameters.V1);
         this.F[0] = F1;
         // F2: Random matrix of dimensions v1  x o1.
-        FullMatrix F2 = new FullMatrix(R, Parameters.v(1), Parameters.o(1)); // F2 of dims v1 x o1
+        FullMatrix F2 = new FullMatrix(R, Parameters.V1, Parameters.O1); // F2 of dims v1 x o1
         this.F[1] = F2;
         // -- auxiliar matrices used to reduce multiplications computation -- //
         FullMatrix A = F1.add(F1.transpose()); // A = F1 + F1T

@@ -28,7 +28,7 @@ public class AffineMapT {
      */
     public AffineMapT(RainbowKeyPairGenerator R) {
         // T1 is a v1 x o1 random matrix.
-        this.T1 = new FullMatrix(R, Parameters.V1, Parameters.O2);
+        this.T1 = new FullMatrix(R, Parameters.V1, Parameters.O1);
         // T2 is a v1 x o2 random matrix.
         this.T2 = new FullMatrix(R, Parameters.V1, Parameters.O2);
         // T3 is a o1 x o2 random matrix.

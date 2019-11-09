@@ -42,7 +42,7 @@ public final class UTMatrix extends Matrix {
      * Crates an empty squared matrix in upper-triangular form.
      *
      * @param F Field to where the matrix belongs.
-     * @param n 
+     * @param n
      */
     public UTMatrix(Field F, int n) {
         this.F = F;
@@ -169,7 +169,7 @@ public final class UTMatrix extends Matrix {
     }
 
     /**
-     * 
+     *
      * @return Field in which the matrix is defined.
      */
     public Field field() {
@@ -193,7 +193,7 @@ public final class UTMatrix extends Matrix {
     }
 
     private int getPosition(int i, int j) {
-        return n * i - (i - 1) * i / 2 + (j - i);
+        return n * i - Math.floorDiv((i - 1) * i, 2) + (j - i);
     }
 
     public LTMatrix transpose() {

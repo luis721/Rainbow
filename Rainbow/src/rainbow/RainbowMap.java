@@ -55,9 +55,6 @@ public class RainbowMap {
             yp = C.solveEquation(A1, b1);
             if (yp != null) {
                 for (int i = Parameters.V1; i < Parameters.V2; i++) {
-                    if (y[i] != 0) {
-                        System.out.println("HIHIHIHI");
-                    }
                     y[i] = yp[i - Parameters.V1];
                 }
                 // Layer 2
