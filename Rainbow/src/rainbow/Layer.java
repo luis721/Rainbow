@@ -1,8 +1,8 @@
 package rainbow;
 
+import java.util.ArrayList;
+import java.util.List;
 import utils.FullMatrix;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Represents the layers in the Rainbow scheme.
@@ -14,7 +14,7 @@ public class Layer {
     // Stores the polynomials in form <key, value>
     // where the key is the polynomial index v1 + 1 <= k <= n
     private final int index;
-    private final Map<Integer, RainbowPolynomial> P;
+    private final List<RainbowPolynomial> P;
     private final FullMatrix MQ;
 
     /**
@@ -31,55 +31,54 @@ public class Layer {
         }
         this.index = index;
         // The hash map will store the polynomials that belong to the layer.
-        this.P = new TreeMap<>();
+        this.P = new ArrayList<>();
         // Contains the starting index of the polynomials in the layer
-        int delta = Parameters.v(index) + 1;
         this.MQ = new FullMatrix(Parameters.F, Parameters.o(index), Math.floorDiv(Parameters.N * (Parameters.N + 1), 2));
         // Creation of the polynomials of the layer
         for (int i = Parameters.v(index) + 1; i <= Parameters.v(index + 1); i++) {
-            P.put(i, new RainbowPolynomial(R, T, i));
+            P.add(new RainbowPolynomial(R, T, i));
         }
+        assert (P.size() == Parameters.o(index));
         // Creation of matrix MQ for the layer.
         // Each matrix Q of the polynomials is inserted in a matrix MQ.
         // The way this is done is described in the report.
         //RainbowPolynomial RP; // Avoiding temporal object creation in each iter
-        assert ((this.P.size() == Parameters.O1 && index == 1) || (this.P.size() == Parameters.O2 && index == 2));
-        for (int f = 0; f < this.P.size(); f++) {
+        for (int k = 0; k < this.P.size(); k++) {
             int c = 0;
-            RainbowPolynomial RP = this.P.get(f + delta);
-            for (int i = 0; i < Parameters.V1; i++) {//Q1||Q2
+            RainbowPolynomial RP = this.P.get(k);
+            for (int i = 0; i < Parameters.V1; i++) {//Q1||Q2||Q3
                 for (int j = i; j < Parameters.V1; j++) {
-                    assert MQ.getElement(f, c) == 0;
-                    MQ.setElement(f, c, RP.Q(1).getElement(i, j));
+                    assert MQ.getElement(k, c) == 0;
+                    MQ.setElement(k, c, RP.Q(1).getElement(i, j));
                     c++;
                 }
                 for (int j = 0; j < Parameters.O1; j++) {
-                    assert MQ.getElement(f, c) == 0;
-                    MQ.setElement(f, c, RP.Q(2).getElement(i, j));
+                    assert MQ.getElement(k, c) == 0;
+                    MQ.setElement(k, c, RP.Q(2).getElement(i, j));
                     c++;
                 }
                 for (int j = 0; j < Parameters.O2; j++) {
-                    assert MQ.getElement(f, c) == 0;
-                    MQ.setElement(f, c, RP.Q(3).getElement(i, j));
+                    assert MQ.getElement(k, c) == 0;
+                    MQ.setElement(k, c, RP.Q(3).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < Parameters.O1; i++) {//Q5||Q6
                 for (int j = i; j < Parameters.O1; j++) {
-                    assert MQ.getElement(f, c) == 0;
-                    MQ.setElement(f, c, RP.Q(5).getElement(i, j));
+                    assert MQ.getElement(k, c) == 0;
+                    MQ.setElement(k, c, RP.Q(5).getElement(i, j));
                     c++;
                 }
                 for (int j = 0; j < Parameters.O2; j++) {
-                    assert MQ.getElement(f, c) == 0;
-                    MQ.setElement(f, c, RP.Q(6).getElement(i, j));
+                    assert MQ.getElement(k, c) == 0;
+                    MQ.setElement(k, c, RP.Q(6).getElement(i, j));
                     c++;
                 }
             }
             for (int i = 0; i < Parameters.O2; i++) {//Q9
                 for (int j = i; j < Parameters.O2; j++) {
-                    assert MQ.getElement(f, c) == 0;
-                    MQ.setElement(f, c, RP.Q(9).getElement(i, j));
+                    assert MQ.getElement(k, c) == 0;
+                    MQ.setElement(k, c, RP.Q(9).getElement(i, j));
                     c++;
                 }
             }
@@ -96,13 +95,13 @@ public class Layer {
         // ol is the number of polynomials in the layer
         int ol = this.P.size();
         int beta;
-        int[][] A = new int[ol][ol];
+        int[][] A = new int[Parameters.o(index)][Parameters.o(index)];
         int delta = Parameters.v(index);
         for (int k = 0; k < ol; k++) {
             for (int j = 0; j < ol; j++) {
                 int s = 0;
                 for (int i = 0; i < Parameters.v(index); i++) {
-                    beta = this.P.get(Parameters.v(index) + 1 + k).getBeta(i, delta + j);
+                    beta = this.P.get(k).getBeta(i, delta + j);
                     s = Parameters.F.add(s, Parameters.F.mult(beta, y[i]));
                 }
                 A[k][j] = s;
@@ -122,8 +121,7 @@ public class Layer {
     public int[] constantPart(int[] x, int[] y) {
         int[] b = new int[Parameters.O1];
         for (int k = 0; k < Parameters.o(index); k++) {
-            int r = Parameters.v(index) + 1 + k;
-            b[k] = Parameters.F.add(x[k], c(y, r));
+            b[k] = Parameters.F.add(x[k], c(y, k));
         }
         return b;
     }
@@ -138,6 +136,14 @@ public class Layer {
             }
         }
         return ck;
+    }
+
+    public int[] eval(int[] y) {
+        int[] x = new int[this.P.size()];
+        for (int i = 0; i < this.P.size(); i++) {
+            x[i] = this.P.get(i).eval(y);
+        }
+        return x;
     }
 
     /**
@@ -156,9 +162,7 @@ public class Layer {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        RainbowPolynomial polinomio;
-        for (Map.Entry<Integer, RainbowPolynomial> entry : P.entrySet()) {
-            polinomio = entry.getValue();
+        for (RainbowPolynomial polinomio : P) {
             b.append(polinomio.toString());
             //b.append('\n');
         }

@@ -89,6 +89,18 @@ public class FullMatrix extends Matrix {
         return result;
     }
 
+    public FullMatrix add(Matrix B) {
+        verifyAdd(B);
+        FullMatrix result = new FullMatrix(F, this.rows, this.cols);
+        for (int row = 0; row < this.rows; row++) {
+            for (int col = 0; col < this.cols; col++) {
+                result.setElement(row, col,
+                        F.add(this.getElement(row, col), B.getElement(row, col)));
+            }
+        }
+        return result;
+    }
+
     /**
      * Performs matrix multiplication between the current (this) matrix and the
      * given matrix B. i.e: C = A * B;
@@ -188,4 +200,5 @@ public class FullMatrix extends Matrix {
         }
         return b.toString();
     }
+
 }

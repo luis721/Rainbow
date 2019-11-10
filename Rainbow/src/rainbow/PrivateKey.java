@@ -75,9 +75,28 @@ public class PrivateKey {
         if (h.length != Parameters.M) {
             throw new IllegalArgumentException("The size of the document must be " + Parameters.M);
         }
+        // x = S*h;
         int[] x = this.S.eval(h);
+        // testing is calculation is right
+        int[] xp = this.S.eval(x);
+        for (int i = 0; i < x.length; i++) {
+            assert (xp[i] == h[i]);
+        }
+        // y such that F(y)= x.
         int[] y = this.F.inverse(x);
-        return this.T.inverse().eval(y);
+        // testing is calculation is right
+        int[] xe = this.F.eval(y);
+        for (int i = 0; i < x.length; i++) {
+            assert (x[i] == xe[i]);
+        }
+        // z = inv(T)*y
+        int[] z = this.T.inverse().eval(y);
+        // testing is calculation is right
+        int[] zp = this.T.eval(z);
+        for (int i = 0; i < z.length; i++) {
+            assert (y[i] == zp[i]);
+        }
+        return z;
     }
 
     /**

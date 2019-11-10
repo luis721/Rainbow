@@ -1,5 +1,6 @@
 package rainbow;
 
+import utils.Field;
 import utils.FullMatrix;
 import utils.Matrix;
 import utils.UTMatrix;
@@ -18,6 +19,7 @@ public class RainbowPolynomial {
     public RainbowPolynomial(RainbowKeyPairGenerator R, AffineMapT T, int index) {
         // Check if layer index is indeed valid
         if (index <= Parameters.V1 || index > Parameters.N) {
+            System.out.println(index);
             throw new IllegalArgumentException("Invalid polynomial index.");
         }
         // The amount of submatrices depends on wheter if the polynomial
@@ -45,7 +47,8 @@ public class RainbowPolynomial {
         FullMatrix F2 = new FullMatrix(R, Parameters.V1, Parameters.O1); // F2 of dims v1 x o1
         this.F[1] = F2;
         // -- auxiliar matrices used to reduce multiplications computation -- //
-        FullMatrix A = F1.add(F1.transpose()); // A = F1 + F1T
+        FullMatrix A = F1.addTranspose(); // A = F1 + F1T
+        assert(A.isSymmetric());
         FullMatrix B = F2.mult(T3);            // B = F2 * T3
         FullMatrix C = A.mult(T1);             // C = A * T1
         FullMatrix D = C.add(F2);              // D = C + F2;
@@ -55,7 +58,7 @@ public class RainbowPolynomial {
         // -- Layer one -- // 
         if (layer == 1) {
             // Q1 = F1.
-            this.Q[0] = this.F(1);
+            this.Q[0] = F(1);
             // Q2 = D;
             this.Q[1] = D;
             // Q3 = A*T2 + B;
@@ -78,9 +81,10 @@ public class RainbowPolynomial {
             F[4] = F6;
             // -- Creation of the needed auxiliar matrices
             FullMatrix T3T = T3.transpose(); // Transpose of T3
-            FullMatrix E = B.add((FullMatrix) F(3));
+            FullMatrix E = B.add(F(3));
             FullMatrix G = A.mult(T2).add(E);
             FullMatrix F5sF5T = F5.add(F5.transpose());
+            assert(F5sF5T.isSymmetric());
             // -- creación de las matrices Q -- //
             // Q1 = F1;
             this.Q[0] = this.F(1);
@@ -88,8 +92,8 @@ public class RainbowPolynomial {
             this.Q[1] = D;
             // Q3 = A * T2 + E.
             this.Q[2] = G;
-            // Q5 = UT(T1T *(F1 * T1 + F2)).
-            this.Q[3] = T1T.mult(F1.mult(T1).add(F2)).UT();
+            // Q5 = UT(T1T *(F1 * T1 + F2) + F5 ).
+            this.Q[3] = T1T.mult(F1.mult(T1).add(F2)).add(F5).UT();
             // Q6 = (D + F2T) * T2 + T1T * E + (F5 + F5T) * T3 + F6 
             this.Q[4] = T1T.mult(G).add(F2.transpose().mult(T2)).add(F5sF5T.mult(T3)).add(F6);
             // Q9 = UI( T2T * (F1 * T2 + E) + T3T * (F5 * T3 + F6) )
@@ -191,6 +195,22 @@ public class RainbowPolynomial {
             default:
                 throw new IllegalArgumentException("Index no válido.");
         }
+    }
+
+    public int eval(int[] y) {
+        Field F = Parameters.F;
+        int r = 0;
+        for (int j = 0; j < Parameters.v(layer); j++) {
+            for (int i = 0; i < j; i++) {
+                r = F.add(r, F.mult(getAlpha(i, j), F.mult(y[i], y[j])));
+            }
+        }
+        for (int i = 0; i < Parameters.v(layer); i++) {
+            for (int j = Parameters.v(layer); j < Parameters.v(layer + 1); j++) {
+                r = F.add(r, F.mult(getBeta(i, j), F.mult(y[i], y[j])));
+            }
+        }
+        return r;
     }
 
     /**

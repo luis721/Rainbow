@@ -89,6 +89,15 @@ public class RainbowMap {
         return layers[1];
     }
 
+    public int[] eval(int[] y) {
+        int[] x = new int[Parameters.M];
+        int[] x1 = this.layers[0].eval(y);
+        int[] x2 = this.layers[1].eval(y);
+        System.arraycopy(x1, 0, x, 0, Parameters.O1);
+        System.arraycopy(x2, 0, x, Parameters.O1, Parameters.O2);
+        return x;
+    }
+
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder(this.layers[0].toString());
@@ -97,6 +106,3 @@ public class RainbowMap {
     }
 
 }
-
-
-

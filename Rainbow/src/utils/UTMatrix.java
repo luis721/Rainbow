@@ -47,7 +47,7 @@ public final class UTMatrix extends Matrix {
     public UTMatrix(Field F, int n) {
         this.F = F;
         this.n = n;
-        this.V = new int[n * (n + 1) / 2];
+        this.V = new int[Math.floorDiv(n * (n + 1), 2)];
     }
 
     /**
@@ -166,6 +166,18 @@ public final class UTMatrix extends Matrix {
             }
         }
         return C;
+    }
+
+    public FullMatrix addTranspose() {
+        FullMatrix M = new FullMatrix(F, n, n);
+        for (int i = 0; i < n; i++) {
+            M.setElement(i, i, 0);
+            for (int j = i + 1; j < n; j++) {
+                M.setElement(i, j, this.getElement(i, j));
+                M.setElement(j, i, this.getElement(i, j));
+            }
+        }
+        return M;
     }
 
     /**
