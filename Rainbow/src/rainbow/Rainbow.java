@@ -13,19 +13,19 @@ public class Rainbow {
     public static void main(String[] args) throws IOException {
         // Generación de las llaves
         RainbowKeyPairGenerator R = new RainbowKeyPairGenerator();
+        R.getPk().writeToFile("MP.txt");
+        R.getSk().writeToFile();
         // Generates a random hashed document of size m
         int[] h = new int[Parameters.M];
-        Arrays.setAll(h, i -> 0);
+        Arrays.setAll(h, i -> 1);
         // Generates the signature for h
-        int[] s = R.getSk().signature(h);
+        int[] z = R.getSk().signature(h);
         // Shows the signature
-        for (int i = 0; i < s.length; i++) {
-            System.out.print(s[i] + " ");
+        for (int i = 0; i < z.length; i++) {
+            System.out.print(z[i] + " ");
         }
         System.out.println("\n¿Es valida?");
-        System.out.println(R.getPk().isValid(s, h));
+        System.out.println(R.getPk().isValid(z, h));
         System.out.println("");
-        R.getPk().writeToFile("public.key");
-        R.getSk().writeToFile("private.key");
     }
 }

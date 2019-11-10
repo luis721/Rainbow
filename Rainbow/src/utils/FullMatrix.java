@@ -1,6 +1,7 @@
 package utils;
 
 import org.bouncycastle.util.encoders.Hex;
+import rainbow.Parameters;
 import rainbow.RainbowKeyPairGenerator;
 
 /**
@@ -71,7 +72,9 @@ public class FullMatrix extends Matrix {
      */
     @Override
     public int getElement(int i, int j) {
-        return elements[i][j];
+        int e = elements[i][j];
+        assert (e <= 255);
+        return e;
     }
 
     public FullMatrix add(FullMatrix B) {
@@ -142,7 +145,7 @@ public class FullMatrix extends Matrix {
             // -- diagonal -- //
             result.setElement(i, i, this.getElement(i, i));
             for (int j = i + 1; j < rows; j++) {
-                result.setElement(i, j, this.getElement(i, j) + this.getElement(i, j));
+                result.setElement(i, j, Parameters.F.add(this.getElement(i, j), this.getElement(j, i)));
             }
         }
         //Result matrix is in UT form
@@ -186,5 +189,3 @@ public class FullMatrix extends Matrix {
         return b.toString();
     }
 }
-
-

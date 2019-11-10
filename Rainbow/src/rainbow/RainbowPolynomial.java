@@ -12,21 +12,24 @@ public class RainbowPolynomial {
 
     private final Matrix[] F;
     private final Matrix[] Q;
+    private final int index;
     private final int layer;
 
-    public RainbowPolynomial(RainbowKeyPairGenerator R, AffineMapT T, int layer) {
+    public RainbowPolynomial(RainbowKeyPairGenerator R, AffineMapT T, int index) {
         // Check if layer index is indeed valid
-        if (layer <= 0 || layer > 2) {
-            throw new IllegalArgumentException("Invalid layer index.");
+        if (index <= Parameters.V1 || index > Parameters.N) {
+            throw new IllegalArgumentException("Invalid polynomial index.");
         }
         // The amount of submatrices depends on wheter if the polynomial
         // belongs to the layer one or to the layer two.
-        if (layer == 1) {
+        if (index <= Parameters.V2) {
             this.F = new Matrix[2];
+            layer = 1;
         } else {
             this.F = new Matrix[5];
+            layer = 2;
         }
-        this.layer = layer;
+        this.index = index;
         // Matrices related to the affine map T
         FullMatrix T1 = T.T(1);
         FullMatrix T2 = T.T(2);
@@ -211,5 +214,16 @@ public class RainbowPolynomial {
         return b.toString();
     }
 
-}
+    @Override
+    public boolean equals(Object obj) {
+        return this.index == ((RainbowPolynomial) obj).index;
+    }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + this.index;
+        return hash;
+    }
+
+}

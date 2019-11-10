@@ -1,7 +1,6 @@
 package rainbow;
 
 import utils.FullMatrix;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -38,7 +37,7 @@ public class Layer {
         this.MQ = new FullMatrix(Parameters.F, Parameters.o(index), Math.floorDiv(Parameters.N * (Parameters.N + 1), 2));
         // Creation of the polynomials of the layer
         for (int i = Parameters.v(index) + 1; i <= Parameters.v(index + 1); i++) {
-            P.put(i, new RainbowPolynomial(R, T, index));
+            P.put(i, new RainbowPolynomial(R, T, i));
         }
         // Creation of matrix MQ for the layer.
         // Each matrix Q of the polynomials is inserted in a matrix MQ.
@@ -59,8 +58,6 @@ public class Layer {
                     MQ.setElement(f, c, RP.Q(2).getElement(i, j));
                     c++;
                 }
-            }
-            for (int i = 0; i < Parameters.V1; i++) {//Q3
                 for (int j = 0; j < Parameters.O2; j++) {
                     assert MQ.getElement(f, c) == 0;
                     MQ.setElement(f, c, RP.Q(3).getElement(i, j));

@@ -1,5 +1,8 @@
 package rainbow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import utils.FullMatrix;
 
 /**
@@ -88,6 +91,11 @@ public class AffineMapS {
         return this.Sp.toString();
     }
 
+    public void writeToFile(String file) throws IOException {
+        File f = new File(file);
+        FileWriter w = new FileWriter(f);
+        w.write(this.toString());
+        w.close();
+    }
+
 }
-
-

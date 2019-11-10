@@ -32,7 +32,9 @@ public class Field extends GF2mField {
      */
     @Override
     public int add(int a, int b) {
-        return super.add(a, b) & MASK;
+        int r = super.add(a, b) & MASK;
+        assert (r <= 255);
+        return r;
     }
 
     /**
@@ -44,11 +46,16 @@ public class Field extends GF2mField {
      */
     @Override
     public int mult(int a, int b) {
-        return super.mult(a, b) & MASK;
+        int r = super.mult(a, b) & MASK;
+        assert (r <= 255);
+        return r;
     }
 
-    public int div(int a, int b) {
-        return super.mult(a, super.inverse(b));
+    @Override
+    public int inverse(int a) {
+        int r = super.inverse(a);
+        assert (r <= 255);
+        return r;
     }
 
     @Override

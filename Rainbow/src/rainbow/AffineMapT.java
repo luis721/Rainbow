@@ -1,5 +1,8 @@
 package rainbow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import utils.Field;
 import utils.FullMatrix;
 
@@ -23,8 +26,8 @@ public class AffineMapT {
     /**
      * Creates an invertible random affine map (T) of size n x n.
      *
-     * @param R Rainbow key pair generator instance used to generate the random elements in the
-     * matrices T1, T2 and T3.
+     * @param R Rainbow key pair generator instance used to generate the random
+     * elements in the matrices T1, T2 and T3.
      */
     public AffineMapT(RainbowKeyPairGenerator R) {
         // T1 is a v1 x o1 random matrix.
@@ -131,5 +134,11 @@ public class AffineMapT {
         return b.toString();
     }
 
-}
+    public void writeToFile(String file) throws IOException {
+        File f = new File(file);
+        FileWriter w = new FileWriter(f);
+        w.write(this.toString());
+        w.close();
+    }
 
+}

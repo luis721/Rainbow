@@ -3,6 +3,7 @@ package rainbow;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import utils.Field;
 import utils.FullMatrix;
 
@@ -53,10 +54,8 @@ public class PublicKey {
         while (i < v.length) {
             if (v[i] == h[i]) {
                 System.out.printf("v[%d] == h[%d]\n", i, i);
-                i++;
-            } else {
-                i++;
             }
+            i++;
         }
         return true;
     }
@@ -64,13 +63,13 @@ public class PublicKey {
     private int[] eval(int[] z) {
         Field F = Parameters.F;
         int[] r = new int[Parameters.M];
+        Arrays.setAll(r, i -> 0);
         for (int k = 0; k < Parameters.M; k++) {
-            r[k] = 0;
             int col = 0;
             for (int i = 0; i < Parameters.N; i++) {
                 for (int j = i; j < Parameters.N; j++) {
                     r[k] = F.add(r[k], F.mult(this.getElement(k, col), F.mult(z[i], z[j])));
-                    col++;
+                    col = col + 1;
                 }
             }
         }
@@ -99,7 +98,7 @@ public class PublicKey {
      */
     public void writeToFile(String file) throws IOException {
         File f = new File(file);
-        try (FileWriter w = new FileWriter(f)) {
+        try ( FileWriter w = new FileWriter(f)) {
             w.write(this.toString());
         }
     }

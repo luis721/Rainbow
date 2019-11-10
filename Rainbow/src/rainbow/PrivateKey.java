@@ -97,16 +97,19 @@ public class PrivateKey {
      * @param file Route for the file where the key will be stored.
      * @throws IOException
      */
-    public void writeToFile(String file) throws IOException {
-        File f = new File(file);
+    public void writeToFile() throws IOException {
+        File f = new File("S.txt");
         FileWriter w = new FileWriter(f);
         w.write(this.S.toString());
-        w.write('\n');
+        w.close();
+        f = new File("T.txt");
+        w = new FileWriter(f);
         w.write(this.T.toString());
-        w.write('\n');
+        w.close();
+        f = new File("S.txt");
+        w = new FileWriter(f);
         w.write(this.F.toString());
         w.close();
     }
 
 }
-
