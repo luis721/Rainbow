@@ -51,7 +51,6 @@ public class RainbowPolynomial {
         this.F[1] = F2;
         // -- auxiliar matrices used to reduce multiplications computation -- //
         FullMatrix A = F1.addTranspose(); // A = F1 + F1T
-        assert (A.isSymmetric());
         FullMatrix B = F2.mult(T3);            // B = F2 * T3
         FullMatrix C = A.mult(T1);             // C = A * T1
         FullMatrix D = C.add(F2);              // D = C + F2;
@@ -86,8 +85,7 @@ public class RainbowPolynomial {
             FullMatrix T3T = T3.transpose(); // Transpose of T3
             FullMatrix E = B.add(F(3));
             FullMatrix G = A.mult(T2).add(E);
-            FullMatrix F5sF5T = F5.add(F5.transpose());
-            assert (F5sF5T.isSymmetric());
+            FullMatrix F5sF5T = F5.addTranspose();
             // -- creación de las matrices Q -- //
             // Q1 = F1;
             this.Q[0] = this.F(1);
@@ -96,7 +94,7 @@ public class RainbowPolynomial {
             // Q3 = A * T2 + E.
             this.Q[2] = G;
             // Q5 = UT(T1T *(F1 * T1 + F2) + F5 ).
-            this.Q[3] = T1T.mult(F1.mult(T1).add(F2)).add(F5).UT();
+            this.Q[3] = T1T.mult(F1).mult(T1).add(T1T.mult(F2)).add(F5).UT();
             // Q6 = (D + F2T) * T2 + T1T * E + (F5 + F5T) * T3 + F6 
             this.Q[4] = T1T.mult(G).add(F2.transpose().mult(T2)).add(F5sF5T.mult(T3)).add(F6);
             // Q9 = UI( T2T * (F1 * T2 + E) + T3T * (F5 * T3 + F6) )
@@ -110,27 +108,20 @@ public class RainbowPolynomial {
      * @return submatrix Fk of the polynomial.
      */
     public final Matrix F(int k) {
-        Matrix Re;
         switch (k) {
             case 1:
-                Re = this.F[0];
-                break;
+                return this.F[0];
             case 2:
-                Re = this.F[1];
-                break;
+                return this.F[1];
             case 3:
-                Re = this.F[2];
-                break;
+                return this.F[2];
             case 5:
-                Re = this.F[3];
-                break;
+                return this.F[3];
             case 6:
-                Re = this.F[4];
-                break;
+                return this.F[4];
             default:
                 throw new IllegalArgumentException("Index no válido.");
         }
-        return Re;
     }
 
     /**
@@ -237,7 +228,7 @@ public class RainbowPolynomial {
         return b.toString();
     }
 
-    private int getElement(int i, int j) {
+    public int getElement(int i, int j) {
         if (i < Parameters.V1) {
             if (j < Parameters.V1) {
                 return F(1).getElement(i, j);
@@ -250,7 +241,7 @@ public class RainbowPolynomial {
             }
         } else if (layer == 2 && i < Parameters.V2) {
             i = i - Parameters.V1;
-            if (Parameters.V1 + 1 <= j) {
+            if (Parameters.V1 <= j) {
                 if (j < Parameters.V2) {
                     return F(5).getElement(i, j - Parameters.V1);
                 } else if (j < Parameters.N) {

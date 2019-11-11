@@ -43,14 +43,15 @@ public class RainbowMap {
         // Create random values for (y1 ... yv1)
         boolean valid = false;
         int[] yp;
+        SecureRandom SR = new SecureRandom();
         do {
             // initial random values. 
             for (int i = 0; i < Parameters.V1; i++) {
-                y[i] = Parameters.F.getRandomNonZeroElement(new SecureRandom());
+                y[i] = Parameters.F.getRandomNonZeroElement(SR);
             }
             // Layer 1
             int[][] A1 = this.layers[0].coefficientMatrix(y);
-            int[] b1 = this.layers[0].constantPart(x, y);
+            int[] b1 = this.layers[0].constantPart(x, y, 0);
             // system to solve for the first layer
             ComputeInField C = new ComputeInField();
             yp = C.solveEquation(A1, b1);
@@ -60,7 +61,7 @@ public class RainbowMap {
                 }
                 // Layer 2
                 int[][] A2 = this.layers[1].coefficientMatrix(y);
-                int[] b2 = this.layers[1].constantPart(x, y);
+                int[] b2 = this.layers[1].constantPart(x, y, Parameters.o(1));
                 // system to solve for the second layer
                 yp = C.solveEquation(A2, b2);
                 if (yp != null) {

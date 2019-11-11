@@ -48,12 +48,18 @@ public class PublicKey {
         }
     }
 
+    /**
+     * Checks wheter if a given signature z is valid for a hashed document h
+     * @param z Signature
+     * @param h Hash for the document
+     * @return True or false, depending on whether if P(z) == h.
+     */
     public boolean isValid(int[] z, int[] h) {
         int[] v = this.eval(z);
         int i = 0;
         while (i < v.length) {
-            if (v[i] == h[i]) {
-                System.out.printf("v[%d] == h[%d]\n", i, i);
+            if (v[i] != h[i]) {
+                return false;
             }
             i++;
         }
@@ -102,25 +108,4 @@ public class PublicKey {
         }
     }
 
-    public static void main(String[] args) {
-        RainbowKeyPairGenerator RKGP = new RainbowKeyPairGenerator();
-        RainbowMap RM = RKGP.getSk().getF();
-        FullMatrix Sp = new FullMatrix(Parameters.F, 1, 1);
-        Sp.setElement(0, 0, 130);
-        PublicKey PK = new PublicKey(RM, Sp);
-        //
-        int[] MP1 = new int[]{91, 99, 232, 131, 77, 237, 246, 233, 244, 210, 167, 4, 122, 21, 208};
-        for (int i = 0; i < PK.MP1.cols(); i++) {
-            PK.MP1.setElement(0, i, MP1[i]);
-        }
-        int[] MP2 = new int[]{31, 89, 20, 102, 46, 11, 189, 13, 94, 117, 18, 24, 109, 86, 167};
-        for (int i = 0; i < PK.MP2.cols(); i++) {
-            PK.MP2.setElement(0, i, MP2[i]);
-        }
-        //
-        int[] w = PK.eval(new int[]{1, 1, 1, 1, 1});
-        for (int i = 0; i < w.length; i++) {
-            System.out.println(w[i]);
-        }
-    }
 }

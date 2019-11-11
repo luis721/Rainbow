@@ -1,6 +1,5 @@
 package utils;
 
-import org.bouncycastle.util.encoders.Hex;
 import rainbow.Parameters;
 import rainbow.RainbowKeyPairGenerator;
 
@@ -119,6 +118,29 @@ public class FullMatrix extends Matrix {
                             F.mult(this.getElement(x, z), B.getElement(z, y)));
                 }
                 result.setElement(x, y, value);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Performs matrix multiplication between the current (this) matrix and the
+     * given matrix B. i.e: C = A * B;
+     *
+     * @param B Matrix to be multiplied with the current (this) matrix.
+     * @return
+     */
+    public FullMatrix mult(Matrix B) {
+        verifyMult(B);
+        FullMatrix result = new FullMatrix(F, this.rows, B.cols());
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < B.cols(); j++) {
+                int value = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    value = F.add(value,
+                            F.mult(this.getElement(i, k), B.getElement(k, j)));
+                }
+                result.setElement(i, j, value);
             }
         }
         return result;

@@ -75,25 +75,10 @@ public class PrivateKey {
         }
         // x = S*h;
         int[] x = this.S.eval(h);
-        // testing is calculation is right
-        int[] xp = this.S.eval(x);
-        for (int i = 0; i < x.length; i++) {
-            assert (xp[i] == h[i]);
-        }
         // y such that F(y)= x.
         int[] y = this.F.inverse(x);
-        // testing is calculation is right
-        int[] xe = this.F.eval(y);
-        for (int i = 0; i < x.length; i++) {
-            assert (x[i] == xe[i]);
-        }
-        // z = inv(T)*y
+        // z = T\y.
         int[] z = this.T.inverse().eval(y);
-        // testing is calculation is right
-        int[] zp = this.T.eval(z);
-        for (int i = 0; i < z.length; i++) {
-            assert (y[i] == zp[i]);
-        }
         return z;
     }
 
@@ -111,7 +96,6 @@ public class PrivateKey {
      * representation of the central map F. This is, the string representation
      * for each of the m rainbow polynomials.
      *
-     * @param file Route for the file where the key will be stored.
      * @throws IOException
      */
     public void writeToFile() throws IOException {

@@ -9,9 +9,7 @@ import org.bouncycastle.pqc.math.linearalgebra.GF2mField;
  * @author mlcarcamo
  */
 public class Field extends GF2mField {
-
     private static final int MASK = 0x00ff;
-    private int counter = 0;
 
     /**
      *
@@ -61,9 +59,7 @@ public class Field extends GF2mField {
 
     @Override
     public int getRandomNonZeroElement(SecureRandom sr) {
-        counter++;
-        return counter & MASK;
-        // return super.getRandomNonZeroElement(sr) & MASK;
+        return super.getRandomNonZeroElement(sr) & MASK;
     }
 
 }

@@ -64,11 +64,10 @@ public class AffineMapS {
         for (int i = 0; i < Parameters.M; i++) {
             x[i] = h[i];
         }
-        int j;
         for (int i = 0; i < Parameters.O1; i++) {
-            j = Parameters.O1;
-            while (j < Parameters.O2) {
-                x[i] = Parameters.F.add(x[i], Parameters.F.mult(Sp.getElement(i, j), h[j]));
+            int j = Parameters.O1;
+            while (j < Parameters.M) {
+                x[i] = Parameters.F.add(x[i], Parameters.F.mult(Sp.getElement(i, j-Parameters.O1), h[j]));
                 j++;
             }
         }

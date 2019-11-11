@@ -85,11 +85,10 @@ public class AffineMapT {
         for (int i = 0; i < Parameters.N; i++) {
             z[i] = y[i];
         }
-        int j;
         for (int i = 0; i < Parameters.V2; i++) {
             // First V1 rows of T
             if (i < Parameters.V1) {
-                j = Parameters.V1;
+                int j = Parameters.V1;
                 // Multiplying T1 terms
                 while (j < Parameters.V2) {
                     z[i] = F.add(z[i], F.mult(T1.getElement(i, j - Parameters.V1), y[j]));
@@ -102,7 +101,7 @@ public class AffineMapT {
                 }
             } else {
                 // Multiplying T3 terms
-                j = Parameters.V2;
+                int j = Parameters.V2;
                 while (j < Parameters.N) {
                     z[i] = F.add(z[i], F.mult(T3.getElement(i - Parameters.V1, j - Parameters.V2), y[j]));
                     j++;
