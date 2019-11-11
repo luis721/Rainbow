@@ -1,6 +1,5 @@
 package rainbow;
 
-import java.io.IOException;
 import java.security.SecureRandom;
 import utils.ComputeInField;
 
