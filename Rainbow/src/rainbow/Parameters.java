@@ -10,9 +10,9 @@ public class Parameters {
 
     private final static int pol = Integer.decode("0x11D");
     public final static Field F = new Field(8, pol);
-    public final static int V1 = 5;
-    public final static int O1 = 3;
-    public final static int O2 = 3;
+    public final static int V1 = 3;
+    public final static int O1 = 1;
+    public final static int O2 = 1;
     public final static int V2 = V1 + O1;
     public final static int N = V2 + O2;
     public final static int M = O1 + O2;

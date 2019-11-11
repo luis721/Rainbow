@@ -1,5 +1,8 @@
 package rainbow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import utils.Field;
 import utils.FullMatrix;
 import utils.Matrix;
@@ -48,7 +51,7 @@ public class RainbowPolynomial {
         this.F[1] = F2;
         // -- auxiliar matrices used to reduce multiplications computation -- //
         FullMatrix A = F1.addTranspose(); // A = F1 + F1T
-        assert(A.isSymmetric());
+        assert (A.isSymmetric());
         FullMatrix B = F2.mult(T3);            // B = F2 * T3
         FullMatrix C = A.mult(T1);             // C = A * T1
         FullMatrix D = C.add(F2);              // D = C + F2;
@@ -84,7 +87,7 @@ public class RainbowPolynomial {
             FullMatrix E = B.add(F(3));
             FullMatrix G = A.mult(T2).add(E);
             FullMatrix F5sF5T = F5.add(F5.transpose());
-            assert(F5sF5T.isSymmetric());
+            assert (F5sF5T.isSymmetric());
             // -- creación de las matrices Q -- //
             // Q1 = F1;
             this.Q[0] = this.F(1);
@@ -224,26 +227,45 @@ public class RainbowPolynomial {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        for (Matrix matrix : F) {
-            if (matrix.getClass().toString().equals("UTMatrix")) {
-                b.append(((UTMatrix) matrix).toString());
-            } else {
-                b.append(matrix.toString());
+        for (int i = 0; i < Parameters.N; i++) {
+            for (int j = 0; j < Parameters.N; j++) {
+                b.append(getElement(i, j));
+                b.append(',');
             }
+            b.append('\n');
         }
         return b.toString();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return this.index == ((RainbowPolynomial) obj).index;
+    private int getElement(int i, int j) {
+        if (i < Parameters.V1) {
+            if (j < Parameters.V1) {
+                return F(1).getElement(i, j);
+            } else if (j < Parameters.V2) {
+                return F(2).getElement(i, j - Parameters.V1);
+            } else if (j < Parameters.N) {
+                if (layer == 2) {
+                    return F(3).getElement(i, j - Parameters.V2);
+                }
+            }
+        } else if (layer == 2 && i < Parameters.V2) {
+            i = i - Parameters.V1;
+            if (Parameters.V1 + 1 <= j) {
+                if (j < Parameters.V2) {
+                    return F(5).getElement(i, j - Parameters.V1);
+                } else if (j < Parameters.N) {
+                    return F(6).getElement(i, j - Parameters.V2);
+                }
+            }
+        }
+        return 0;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + this.index;
-        return hash;
+    public void writeToFile() throws IOException {
+        File f = new File("F" + index + ".txt");
+        FileWriter w = new FileWriter(f);
+        w.write(this.toString());
+        w.close();
     }
 
 }

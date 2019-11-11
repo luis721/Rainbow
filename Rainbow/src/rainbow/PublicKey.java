@@ -85,7 +85,6 @@ public class PublicKey {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder(MP1.toString());
-        b.append('\n');
         b.append(MP2.toString());
         return b.toString();
     }

@@ -1,7 +1,5 @@
 package rainbow;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -117,18 +115,9 @@ public class PrivateKey {
      * @throws IOException
      */
     public void writeToFile() throws IOException {
-        File f = new File("S.txt");
-        FileWriter w = new FileWriter(f);
-        w.write(this.S.toString());
-        w.close();
-        f = new File("T.txt");
-        w = new FileWriter(f);
-        w.write(this.T.toString());
-        w.close();
-        f = new File("S.txt");
-        w = new FileWriter(f);
-        w.write(this.F.toString());
-        w.close();
+        S.writeToFile("S.txt");
+        T.writeToFile("T.txt");
+        F.writeToFile();
     }
 
 }

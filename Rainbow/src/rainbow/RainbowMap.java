@@ -1,5 +1,6 @@
 package rainbow;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import utils.ComputeInField;
 
@@ -98,11 +99,10 @@ public class RainbowMap {
         return x;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder b = new StringBuilder(this.layers[0].toString());
-        b.append(this.layers[1].toString());
-        return b.toString();
+    public void writeToFile() throws IOException {
+        for (Layer l : layers) {
+            l.writeToFile();
+        }
     }
 
 }
