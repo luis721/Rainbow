@@ -91,15 +91,4 @@ public abstract class Matrix {
         }
     }
 
-    public boolean isSymmetric() {
-        for (int i = 0; i < this.rows(); i++) {
-            for (int j = i + 1; j < this.cols(); j++) {
-                if (this.getElement(i, j) != this.getElement(j, i)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 }

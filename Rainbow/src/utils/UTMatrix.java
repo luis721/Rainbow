@@ -1,5 +1,6 @@
 package utils;
 
+import org.bouncycastle.util.encoders.Hex;
 import rainbow.RainbowKeyPairGenerator;
 
 /**
@@ -227,15 +228,16 @@ public final class UTMatrix extends Matrix {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
+        byte[] c = new byte[1];
+        int j;
         for (int i = 0; i < n; i++) {
-            int j = 1;
-            b.append(this.getElement(i, 0));
+            j = i;
             while (j < n) {
-                b.append(',');
-                b.append(this.getElement(i, j));
+                // assert F.isElementOfThisField(elements[i][j]);
+                c[0] = (byte) getElement(i, j);
+                b.append(Hex.toHexString(c));
                 j++;
             }
-            b.append('\n');
         }
         return b.toString();
     }

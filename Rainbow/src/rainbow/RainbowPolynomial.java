@@ -3,7 +3,6 @@ package rainbow;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import utils.Field;
 import utils.FullMatrix;
 import utils.Matrix;
 import utils.UTMatrix;
@@ -125,49 +124,6 @@ public class RainbowPolynomial {
     }
 
     /**
-     * Returns alpha(i,j).
-     *
-     * @param i
-     * @param j
-     * @return
-     */
-    public int getAlpha(int i, int j) {
-        if (this.layer == 1) {
-            return this.F(1).getElement(i, j);
-        } else { // layer == 2
-            if (i < Parameters.V1) {
-                if (j < Parameters.V1) {
-                    return this.F(1).getElement(i, j);
-                } else {
-                    return this.F(2).getElement(i, j - Parameters.V1);
-                }
-            } else {
-                return this.F(5).getElement(i - Parameters.V1, j - Parameters.V1);
-            }
-        }
-    }
-
-    /**
-     * Returns beta given i and j
-     *
-     * @param i
-     * @param j
-     * @return
-     */
-    public int getBeta(int i, int j) {
-        //System.out.println("i: " + i + " j: " + j);
-        if (this.layer == 1) {
-            return this.F(2).getElement(i, j - Parameters.V1);
-        } else { // layer == 2
-            if (i < Parameters.V1) {
-                return this.F(3).getElement(i, j - Parameters.V2);
-            } else {
-                return this.F(6).getElement(i - Parameters.V1, j - Parameters.V2);
-            }
-        }
-    }
-
-    /**
      *
      * @param i Index of the Q submatrix.
      * @return Submatrix Qi related to the Q matrix of the polynomial.
@@ -191,43 +147,13 @@ public class RainbowPolynomial {
         }
     }
 
-    public int eval(int[] y) {
-        Field F = Parameters.F;
-        int r = 0;
-        for (int j = 0; j < Parameters.v(layer); j++) {
-            for (int i = 0; i < j; i++) {
-                r = F.add(r, F.mult(getAlpha(i, j), F.mult(y[i], y[j])));
-            }
-        }
-        for (int i = 0; i < Parameters.v(layer); i++) {
-            for (int j = Parameters.v(layer); j < Parameters.v(layer + 1); j++) {
-                r = F.add(r, F.mult(getBeta(i, j), F.mult(y[i], y[j])));
-            }
-        }
-        return r;
-    }
-
     /**
+     * Return F(i,j)
      *
-     * @return Representación en cadena del polinomio. Es la representación
-     * hexadecimal de cada uno de sus elementos, es decir, la representación
-     * hexadecimal de cada una de sus matrices.
-     *
-     * Las matrices se muestran una por una.
+     * @param i Row index
+     * @param j Column index
+     * @return Element in the i-th row and j-th column of the polynomial
      */
-    @Override
-    public String toString() {
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < Parameters.N; i++) {
-            for (int j = 0; j < Parameters.N; j++) {
-                b.append(getElement(i, j));
-                b.append(',');
-            }
-            b.append('\n');
-        }
-        return b.toString();
-    }
-
     public int getElement(int i, int j) {
         if (i < Parameters.V1) {
             if (j < Parameters.V1) {
@@ -252,11 +178,25 @@ public class RainbowPolynomial {
         return 0;
     }
 
-    public void writeToFile() throws IOException {
-        File f = new File("F" + index + ".txt");
-        FileWriter w = new FileWriter(f);
-        w.write(this.toString());
-        w.close();
+    /**
+     *
+     * @return Representación en cadena del polinomio. Es la representación
+     * hexadecimal de cada uno de sus elementos, es decir, la representación
+     * hexadecimal de cada una de sus matrices.
+     *
+     * Las matrices se muestran una por una.
+     */
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        for (Matrix matrix : F) {
+            if (matrix.getClass().toString().equals("UTMatrix")) {
+                b.append(((UTMatrix) matrix).toString());
+            } else {
+                b.append(matrix.toString());
+            }
+        }
+        return b.toString();
     }
 
 }

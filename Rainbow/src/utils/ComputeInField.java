@@ -3,8 +3,9 @@ package utils;
 import rainbow.Parameters;
 
 /**
+ * Esta clase fue tomada de la implementación de Rainbow disponible en la
+ * librería de Bouncy Castle.
  *
- * @author mlcarcamo
  */
 public class ComputeInField {
 
@@ -175,4 +176,3 @@ public class ComputeInField {
     }
 
 }
-

@@ -1,8 +1,5 @@
 package rainbow;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import utils.FullMatrix;
@@ -134,14 +131,6 @@ public class Layer {
         return ck;
     }
 
-    public int[] eval(int[] y) {
-        int[] x = new int[this.P.size()];
-        for (int i = 0; i < this.P.size(); i++) {
-            x[i] = this.P.get(i).eval(y);
-        }
-        return x;
-    }
-
     /**
      *
      * @return The matrix MQ of the layer.
@@ -150,14 +139,18 @@ public class Layer {
         return this.MQ;
     }
 
-    public void writeToFile() throws IOException {
+    /**
+     *
+     * @return Representación hexadecimal de cada uno de los polinomios de la
+     * capa Cada polinomio va en una linea.
+     */
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
         for (RainbowPolynomial polinomio : P) {
-            polinomio.writeToFile();
+            b.append(polinomio.toString());
         }
-        File f = new File("MQ" + index + ".txt");
-        FileWriter w = new FileWriter(f);
-        w.append(this.MQ.toString());
-        w.close();
+        return b.toString();
     }
 
 }

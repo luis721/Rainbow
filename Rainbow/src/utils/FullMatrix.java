@@ -1,5 +1,6 @@
 package utils;
 
+import org.bouncycastle.util.encoders.Hex;
 import rainbow.Parameters;
 import rainbow.RainbowKeyPairGenerator;
 
@@ -209,15 +210,16 @@ public class FullMatrix extends Matrix {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
+        byte[] c = new byte[1];
+        int j;
         for (int i = 0; i < rows; i++) {
-            int j = 1;
-            b.append(this.getElement(i, 0));
+            j = 0;
             while (j < cols) {
-                b.append(',');
-                b.append(this.getElement(i, j));
+                // assert F.isElementOfThisField(elements[i][j]);
+                c[0] = (byte) elements[i][j];
+                b.append(Hex.toHexString(c));
                 j++;
             }
-            b.append('\n');
         }
         return b.toString();
     }

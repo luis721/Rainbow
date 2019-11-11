@@ -44,6 +44,7 @@ public class RainbowMap {
         boolean valid = false;
         int[] yp;
         SecureRandom SR = new SecureRandom();
+        ComputeInField C = new ComputeInField();
         do {
             // initial random values. 
             for (int i = 0; i < Parameters.V1; i++) {
@@ -53,7 +54,6 @@ public class RainbowMap {
             int[][] A1 = this.layers[0].coefficientMatrix(y);
             int[] b1 = this.layers[0].constantPart(x, y, 0);
             // system to solve for the first layer
-            ComputeInField C = new ComputeInField();
             yp = C.solveEquation(A1, b1);
             if (yp != null) {
                 for (int i = Parameters.V1; i < Parameters.V2; i++) {
@@ -91,19 +91,11 @@ public class RainbowMap {
         return layers[1];
     }
 
-    public int[] eval(int[] y) {
-        int[] x = new int[Parameters.M];
-        int[] x1 = this.layers[0].eval(y);
-        int[] x2 = this.layers[1].eval(y);
-        System.arraycopy(x1, 0, x, 0, Parameters.O1);
-        System.arraycopy(x2, 0, x, Parameters.O1, Parameters.O2);
-        return x;
-    }
-
-    public void writeToFile() throws IOException {
-        for (Layer l : layers) {
-            l.writeToFile();
-        }
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder(this.layers[0].toString());
+        b.append(this.layers[1].toString());
+        return b.toString();
     }
 
 }

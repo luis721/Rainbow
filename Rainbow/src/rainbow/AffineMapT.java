@@ -1,8 +1,5 @@
 package rainbow;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import utils.Field;
 import utils.FullMatrix;
 
@@ -82,9 +79,7 @@ public class AffineMapT {
             throw new IllegalArgumentException("Array size must be " + Parameters.N);
         }
         // The identity is all ones.
-        for (int i = 0; i < Parameters.N; i++) {
-            z[i] = y[i];
-        }
+        System.arraycopy(y, 0, z, 0, Parameters.N);
         for (int i = 0; i < Parameters.V2; i++) {
             // First V1 rows of T
             if (i < Parameters.V1) {
@@ -131,13 +126,6 @@ public class AffineMapT {
         b.append(T2.toString());
         b.append(T3.toString());
         return b.toString();
-    }
-
-    public void writeToFile(String file) throws IOException {
-        File f = new File(file);
-        FileWriter w = new FileWriter(f);
-        w.write(this.toString());
-        w.close();
     }
 
 }

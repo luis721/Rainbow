@@ -50,6 +50,7 @@ public class PublicKey {
 
     /**
      * Checks wheter if a given signature z is valid for a hashed document h
+     *
      * @param z Signature
      * @param h Hash for the document
      * @return True or false, depending on whether if P(z) == h.
@@ -91,6 +92,7 @@ public class PublicKey {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder(MP1.toString());
+        b.append('\n');
         b.append(MP2.toString());
         return b.toString();
     }
