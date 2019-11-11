@@ -1,7 +1,5 @@
 package rainbow;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -75,9 +73,13 @@ public class PrivateKey {
         if (h.length != Parameters.M) {
             throw new IllegalArgumentException("The size of the document must be " + Parameters.M);
         }
+        // x = S*h;
         int[] x = this.S.eval(h);
+        // y such that F(y)= x.
         int[] y = this.F.inverse(x);
-        return this.T.inverse().eval(y);
+        // z = T\y.
+        int[] z = this.T.inverse().eval(y);
+        return z;
     }
 
     /**
@@ -94,19 +96,12 @@ public class PrivateKey {
      * representation of the central map F. This is, the string representation
      * for each of the m rainbow polynomials.
      *
-     * @param file Route for the file where the key will be stored.
      * @throws IOException
      */
-    public void writeToFile(String file) throws IOException {
-        File f = new File(file);
-        FileWriter w = new FileWriter(f);
-        w.write(this.S.toString());
-        w.write('\n');
-        w.write(this.T.toString());
-        w.write('\n');
-        w.write(this.F.toString());
-        w.close();
+    public void writeToFile() throws IOException {
+        S.writeToFile("S.txt");
+        T.writeToFile("T.txt");
+        F.writeToFile();
     }
 
 }
-

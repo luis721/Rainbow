@@ -1,5 +1,8 @@
 package rainbow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import utils.FullMatrix;
 
 /**
@@ -61,11 +64,10 @@ public class AffineMapS {
         for (int i = 0; i < Parameters.M; i++) {
             x[i] = h[i];
         }
-        int j;
         for (int i = 0; i < Parameters.O1; i++) {
-            j = Parameters.O1;
-            while (j < Parameters.O2) {
-                x[i] = Parameters.F.add(x[i], Parameters.F.mult(Sp.getElement(i, j), h[j]));
+            int j = Parameters.O1;
+            while (j < Parameters.M) {
+                x[i] = Parameters.F.add(x[i], Parameters.F.mult(Sp.getElement(i, j-Parameters.O1), h[j]));
                 j++;
             }
         }
@@ -88,6 +90,11 @@ public class AffineMapS {
         return this.Sp.toString();
     }
 
+    public void writeToFile(String file) throws IOException {
+        File f = new File(file);
+        FileWriter w = new FileWriter(f);
+        w.write(this.toString());
+        w.close();
+    }
+
 }
-
-

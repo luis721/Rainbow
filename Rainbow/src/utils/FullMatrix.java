@@ -1,6 +1,6 @@
 package utils;
 
-import org.bouncycastle.util.encoders.Hex;
+import rainbow.Parameters;
 import rainbow.RainbowKeyPairGenerator;
 
 /**
@@ -71,10 +71,24 @@ public class FullMatrix extends Matrix {
      */
     @Override
     public int getElement(int i, int j) {
-        return elements[i][j];
+        int e = elements[i][j];
+        assert (e <= 255);
+        return e;
     }
 
     public FullMatrix add(FullMatrix B) {
+        verifyAdd(B);
+        FullMatrix result = new FullMatrix(F, this.rows, this.cols);
+        for (int row = 0; row < this.rows; row++) {
+            for (int col = 0; col < this.cols; col++) {
+                result.setElement(row, col,
+                        F.add(this.getElement(row, col), B.getElement(row, col)));
+            }
+        }
+        return result;
+    }
+
+    public FullMatrix add(Matrix B) {
         verifyAdd(B);
         FullMatrix result = new FullMatrix(F, this.rows, this.cols);
         for (int row = 0; row < this.rows; row++) {
@@ -104,6 +118,29 @@ public class FullMatrix extends Matrix {
                             F.mult(this.getElement(x, z), B.getElement(z, y)));
                 }
                 result.setElement(x, y, value);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Performs matrix multiplication between the current (this) matrix and the
+     * given matrix B. i.e: C = A * B;
+     *
+     * @param B Matrix to be multiplied with the current (this) matrix.
+     * @return
+     */
+    public FullMatrix mult(Matrix B) {
+        verifyMult(B);
+        FullMatrix result = new FullMatrix(F, this.rows, B.cols());
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < B.cols(); j++) {
+                int value = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    value = F.add(value,
+                            F.mult(this.getElement(i, k), B.getElement(k, j)));
+                }
+                result.setElement(i, j, value);
             }
         }
         return result;
@@ -142,7 +179,7 @@ public class FullMatrix extends Matrix {
             // -- diagonal -- //
             result.setElement(i, i, this.getElement(i, i));
             for (int j = i + 1; j < rows; j++) {
-                result.setElement(i, j, this.getElement(i, j) + this.getElement(i, j));
+                result.setElement(i, j, Parameters.F.add(this.getElement(i, j), this.getElement(j, i)));
             }
         }
         //Result matrix is in UT form
@@ -172,19 +209,17 @@ public class FullMatrix extends Matrix {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        byte[] c = new byte[1];
-        int j;
         for (int i = 0; i < rows; i++) {
-            j = 0;
+            int j = 1;
+            b.append(this.getElement(i, 0));
             while (j < cols) {
-                // assert F.isElementOfThisField(elements[i][j]);
-                c[0] = (byte) elements[i][j];
-                b.append(Hex.toHexString(c));
+                b.append(',');
+                b.append(this.getElement(i, j));
                 j++;
             }
+            b.append('\n');
         }
         return b.toString();
     }
+
 }
-
-

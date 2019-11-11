@@ -58,7 +58,9 @@ public final class RainbowKeyPairGenerator {
      * @return
      */
     public int randomFieldItem() {
-        return Parameters.F.getRandomNonZeroElement(this.sr);
+        int e = Parameters.F.getRandomNonZeroElement(this.sr);
+        assert (e <= 255);
+        return e;
     }
 
     /**

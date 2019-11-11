@@ -1,6 +1,5 @@
 package utils;
 
-import org.bouncycastle.util.encoders.Hex;
 import rainbow.RainbowKeyPairGenerator;
 
 /**
@@ -42,12 +41,12 @@ public final class UTMatrix extends Matrix {
      * Crates an empty squared matrix in upper-triangular form.
      *
      * @param F Field to where the matrix belongs.
-     * @param n 
+     * @param n
      */
     public UTMatrix(Field F, int n) {
         this.F = F;
         this.n = n;
-        this.V = new int[n * (n + 1) / 2];
+        this.V = new int[Math.floorDiv(n * (n + 1), 2)];
     }
 
     /**
@@ -168,8 +167,20 @@ public final class UTMatrix extends Matrix {
         return C;
     }
 
+    public FullMatrix addTranspose() {
+        FullMatrix M = new FullMatrix(F, n, n);
+        for (int i = 0; i < n; i++) {
+            M.setElement(i, i, 0);
+            for (int j = i + 1; j < n; j++) {
+                M.setElement(i, j, this.getElement(i, j));
+                M.setElement(j, i, this.getElement(i, j));
+            }
+        }
+        return M;
+    }
+
     /**
-     * 
+     *
      * @return Field in which the matrix is defined.
      */
     public Field field() {
@@ -189,11 +200,14 @@ public final class UTMatrix extends Matrix {
         if (j < i) {
             return 0;
         }
-        return this.V[getPosition(i, j)];
+        int e = this.V[getPosition(i, j)];
+        assert (e <= 255);
+        return e;
     }
 
     private int getPosition(int i, int j) {
-        return n * i - (i - 1) * i / 2 + (j - i);
+        assert (0 <= i && i < this.rows() && 0 <= j && j < this.cols());
+        return n * i - Math.floorDiv((i - 1) * i, 2) + (j - i);
     }
 
     public LTMatrix transpose() {
@@ -213,16 +227,15 @@ public final class UTMatrix extends Matrix {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        byte[] c = new byte[1];
-        int j;
         for (int i = 0; i < n; i++) {
-            j = i;
+            int j = 1;
+            b.append(this.getElement(i, 0));
             while (j < n) {
-                // assert F.isElementOfThisField(elements[i][j]);
-                c[0] = (byte) getElement(i, j);
-                b.append(Hex.toHexString(c));
+                b.append(',');
+                b.append(this.getElement(i, j));
                 j++;
             }
+            b.append('\n');
         }
         return b.toString();
     }

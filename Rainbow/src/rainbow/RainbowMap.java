@@ -1,8 +1,8 @@
 package rainbow;
 
+import java.io.IOException;
 import java.security.SecureRandom;
-import utils.BlockMatrix;
-import utils.Matrix;
+import utils.ComputeInField;
 
 /**
  * This class represents the Rainbow Central map.
@@ -39,27 +39,35 @@ public class RainbowMap {
      * @return y such that F(y) = x.
      */
     public int[] inverse(int[] x) {
-        int[] y;
+        int[] y = new int[Parameters.N];
         // Create random values for (y1 ... yv1)
         boolean valid = false;
+        int[] yp;
+        SecureRandom SR = new SecureRandom();
         do {
-            y = new int[Parameters.N];
             // initial random values. 
             for (int i = 0; i < Parameters.V1; i++) {
-                y[i] = Parameters.F.getRandomNonZeroElement(new SecureRandom());
+                y[i] = Parameters.F.getRandomNonZeroElement(SR);
             }
             // Layer 1
-            Matrix A1 = this.layers[0].coefficientMatrix(y);
-            Matrix b1 = this.layers[0].constantPart(x, y);
+            int[][] A1 = this.layers[0].coefficientMatrix(y);
+            int[] b1 = this.layers[0].constantPart(x, y, 0);
             // system to solve for the first layer
-            y = new BlockMatrix(Parameters.F, 1, 2, A1, b1).Gauss(y, Parameters.V1);
-            if (y != null) {
+            ComputeInField C = new ComputeInField();
+            yp = C.solveEquation(A1, b1);
+            if (yp != null) {
+                for (int i = Parameters.V1; i < Parameters.V2; i++) {
+                    y[i] = yp[i - Parameters.V1];
+                }
                 // Layer 2
-                Matrix A2 = this.layers[1].coefficientMatrix(y);
-                Matrix b2 = this.layers[1].constantPart(x, y);
+                int[][] A2 = this.layers[1].coefficientMatrix(y);
+                int[] b2 = this.layers[1].constantPart(x, y, Parameters.o(1));
                 // system to solve for the second layer
-                y = new BlockMatrix(Parameters.F, 1, 2, A2, b2).Gauss(y, Parameters.V2);
-                if (y != null) {
+                yp = C.solveEquation(A2, b2);
+                if (yp != null) {
+                    for (int i = Parameters.V2; i < Parameters.N; i++) {
+                        y[i] = yp[i - Parameters.V2];
+                    }
                     valid = true;
                 }
             }
@@ -83,11 +91,19 @@ public class RainbowMap {
         return layers[1];
     }
 
-    @Override
-    public String toString() {
-        StringBuilder b = new StringBuilder(this.layers[0].toString());
-        b.append(this.layers[1].toString());
-        return b.toString();
+    public int[] eval(int[] y) {
+        int[] x = new int[Parameters.M];
+        int[] x1 = this.layers[0].eval(y);
+        int[] x2 = this.layers[1].eval(y);
+        System.arraycopy(x1, 0, x, 0, Parameters.O1);
+        System.arraycopy(x2, 0, x, Parameters.O1, Parameters.O2);
+        return x;
+    }
+
+    public void writeToFile() throws IOException {
+        for (Layer l : layers) {
+            l.writeToFile();
+        }
     }
 
 }

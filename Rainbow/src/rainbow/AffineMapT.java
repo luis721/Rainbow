@@ -1,5 +1,8 @@
 package rainbow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import utils.Field;
 import utils.FullMatrix;
 
@@ -23,12 +26,12 @@ public class AffineMapT {
     /**
      * Creates an invertible random affine map (T) of size n x n.
      *
-     * @param R Rainbow key pair generator instance used to generate the random elements in the
-     * matrices T1, T2 and T3.
+     * @param R Rainbow key pair generator instance used to generate the random
+     * elements in the matrices T1, T2 and T3.
      */
     public AffineMapT(RainbowKeyPairGenerator R) {
         // T1 is a v1 x o1 random matrix.
-        this.T1 = new FullMatrix(R, Parameters.V1, Parameters.O2);
+        this.T1 = new FullMatrix(R, Parameters.V1, Parameters.O1);
         // T2 is a v1 x o2 random matrix.
         this.T2 = new FullMatrix(R, Parameters.V1, Parameters.O2);
         // T3 is a o1 x o2 random matrix.
@@ -82,11 +85,10 @@ public class AffineMapT {
         for (int i = 0; i < Parameters.N; i++) {
             z[i] = y[i];
         }
-        int j;
         for (int i = 0; i < Parameters.V2; i++) {
             // First V1 rows of T
             if (i < Parameters.V1) {
-                j = Parameters.V1;
+                int j = Parameters.V1;
                 // Multiplying T1 terms
                 while (j < Parameters.V2) {
                     z[i] = F.add(z[i], F.mult(T1.getElement(i, j - Parameters.V1), y[j]));
@@ -99,7 +101,7 @@ public class AffineMapT {
                 }
             } else {
                 // Multiplying T3 terms
-                j = Parameters.V2;
+                int j = Parameters.V2;
                 while (j < Parameters.N) {
                     z[i] = F.add(z[i], F.mult(T3.getElement(i - Parameters.V1, j - Parameters.V2), y[j]));
                     j++;
@@ -131,5 +133,11 @@ public class AffineMapT {
         return b.toString();
     }
 
-}
+    public void writeToFile(String file) throws IOException {
+        File f = new File(file);
+        FileWriter w = new FileWriter(f);
+        w.write(this.toString());
+        w.close();
+    }
 
+}

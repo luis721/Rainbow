@@ -22,10 +22,9 @@ public final class LTMatrix extends Matrix {
      */
     public LTMatrix(UTMatrix B) {
         this.n = B.rows();
-        this.V = new int[n * (n + 1) / 2];
-        int j;
+        this.V = new int[Math.floorDiv(n * (n + 1), 2)];
         for (int i = 0; i < n; i++) {
-            j = 0;
+            int j = 0;
             while (j <= i) {
                 this.setElement(i, j, B.getElement(j, i));
                 j++;
@@ -57,7 +56,7 @@ public final class LTMatrix extends Matrix {
      * @return Index of the element in the vector.
      */
     private int getPosition(int i, int j) {
-        return i * (i + 1) / 2 + j;
+        return Math.floorDiv(i * (i + 1), 2) + j;
     }
 
     @Override

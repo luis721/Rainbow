@@ -3,6 +3,7 @@ package rainbow;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import utils.Field;
 import utils.FullMatrix;
 
@@ -47,16 +48,20 @@ public class PublicKey {
         }
     }
 
+    /**
+     * Checks wheter if a given signature z is valid for a hashed document h
+     * @param z Signature
+     * @param h Hash for the document
+     * @return True or false, depending on whether if P(z) == h.
+     */
     public boolean isValid(int[] z, int[] h) {
         int[] v = this.eval(z);
         int i = 0;
         while (i < v.length) {
-            if (v[i] == h[i]) {
-                System.out.printf("v[%d] == h[%d]\n", i, i);
-                i++;
-            } else {
-                i++;
+            if (v[i] != h[i]) {
+                return false;
             }
+            i++;
         }
         return true;
     }
@@ -64,45 +69,14 @@ public class PublicKey {
     private int[] eval(int[] z) {
         Field F = Parameters.F;
         int[] r = new int[Parameters.M];
-        int s;
+        Arrays.setAll(r, i -> 0);
         for (int k = 0; k < Parameters.M; k++) {
-            r[k] = 0;
             int col = 0;
-            // Q1 || Q2
-            for (int i = 0; i < Parameters.V1; i++) {
-                s = 0;
-                for (int j = i; j < Parameters.V2; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
-                    col++;
-                }
-                r[k] = F.add(r[k], F.mult(z[i], s));
-            }
-            //  Q3
-            for (int i = 0; i < Parameters.V1; i++) {
-                s = 0;
-                for (int j = Parameters.V2; j < Parameters.N; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
-                    col++;
-                }
-                r[k] = F.add(r[k], F.mult(z[i], s));
-            }
-            // Q5 || Q6
-            for (int i = Parameters.V1; i < Parameters.V2; i++) {
-                s = 0;
+            for (int i = 0; i < Parameters.N; i++) {
                 for (int j = i; j < Parameters.N; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
-                    col++;
+                    r[k] = F.add(r[k], F.mult(this.getElement(k, col), F.mult(z[i], z[j])));
+                    col = col + 1;
                 }
-                r[k] = F.add(r[k], F.mult(z[i], s));
-            }
-            // Q9
-            for (int i = Parameters.V2; i < Parameters.N; i++) {
-                s = 0;
-                for (int j = i; j < Parameters.N; j++) {
-                    s = F.add(s, F.mult(this.getElement(k, col), z[j]));
-                    col++;
-                }
-                r[k] = F.add(r[k], F.mult(z[i], s));
             }
         }
         return r;
@@ -117,7 +91,6 @@ public class PublicKey {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder(MP1.toString());
-        b.append('\n');
         b.append(MP2.toString());
         return b.toString();
     }
@@ -130,8 +103,9 @@ public class PublicKey {
      */
     public void writeToFile(String file) throws IOException {
         File f = new File(file);
-        try (FileWriter w = new FileWriter(f)) {
+        try ( FileWriter w = new FileWriter(f)) {
             w.write(this.toString());
         }
     }
+
 }
